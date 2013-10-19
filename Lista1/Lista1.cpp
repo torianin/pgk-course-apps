@@ -11,6 +11,7 @@
 #include <common/shader.hpp>
 
 #include "Game.h"
+#include "Options.hpp"
 
 int main( void )
 {
@@ -41,7 +42,7 @@ int main( void )
 		return -1;
 	}
 
-	glfwSetWindowTitle( "Tutorial 02" );
+	glfwSetWindowTitle( "Mastermind" );
 	
 	Game game;
 
@@ -65,65 +66,102 @@ int main( void )
 
 		// Use our shader
 		glUseProgram(programID);
-
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.positionOfPawns()[0]);
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
+		for(int f = 0; f < FIGURES ; f++){
+			// 1rst attribute buffer : vertices
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.positionOfPawns()[f]);
+			glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				(void*)0            // array buffer offset
+			);
 		
-		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.randomlySelectedColors()[0]);
-		glVertexAttribPointer(
-			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			3,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
+			// 2nd attribute buffer : colors
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.generatedColors()[game.gamePlayer.colors[f]]);
+			glVertexAttribPointer(
+				1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+				3,                                // size
+				GL_FLOAT,                         // type
+				GL_FALSE,                         // normalized?
+				0,                                // stride
+				(void*)0                          // array buffer offset
+			);
 
 
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
-
-		glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.positionOfPawns()[1]);
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
+		}
 		
-		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.randomlySelectedColors()[1]);
-		glVertexAttribPointer(
-			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			3,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
-
-
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
-
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 
 		// Swap buffers
 		glfwSwapBuffers();
 
+		// Strafe right
+		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_RELEASE){
+				if (game.gamePlayer.choosed_pawn < game.gamePlayer.min_value + 3 ){
+					game.gamePlayer.choosed_pawn += 1;
+				}
+			}
+		}
+		// Strafe left
+		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_RELEASE){
+				if (game.gamePlayer.choosed_pawn > game.gamePlayer.min_value + 0){
+					game.gamePlayer.choosed_pawn -= 1;
+				}
+			}
+		}
+
+		else if (glfwGetKey( GLFW_KEY_1 ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_1 ) == GLFW_RELEASE){
+				game.gamePlayer.colors[game.gamePlayer.min_value + game.gamePlayer.choosed_pawn] = 0;
+				std::cout << game.gamePlayer.min_value + game.gamePlayer.choosed_pawn << endl;
+			}
+		}
+
+		else if (glfwGetKey( GLFW_KEY_2 ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_2 ) == GLFW_RELEASE){
+				game.gamePlayer.colors[game.gamePlayer.min_value + game.gamePlayer.choosed_pawn] = 1;
+				std::cout << game.gamePlayer.min_value + game.gamePlayer.choosed_pawn << endl;
+			}
+		}
+
+		else if (glfwGetKey( GLFW_KEY_3 ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_3 ) == GLFW_RELEASE){
+				game.gamePlayer.colors[game.gamePlayer.min_value + game.gamePlayer.choosed_pawn] = 2;
+			}
+		}
+
+		else if (glfwGetKey( GLFW_KEY_4 ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_4 ) == GLFW_RELEASE){
+				game.gamePlayer.colors[game.gamePlayer.min_value + game.gamePlayer.choosed_pawn] = 3;
+			}		
+		}
+
+		else if (glfwGetKey( GLFW_KEY_5 ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_5 ) == GLFW_RELEASE){
+				game.gamePlayer.colors[game.gamePlayer.min_value + game.gamePlayer.choosed_pawn] = 4;
+			}	
+		}
+
+		else if (glfwGetKey( GLFW_KEY_6 ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_6 ) == GLFW_RELEASE){
+				game.gamePlayer.colors[game.gamePlayer.min_value + game.gamePlayer.choosed_pawn] = 5;
+			}	
+		}
+
+		else if (glfwGetKey( GLFW_KEY_ENTER ) == GLFW_PRESS){
+			if (glfwGetKey( GLFW_KEY_ENTER ) == GLFW_RELEASE){
+				game.gamePlayer.min_value += 4;
+				game.gamePlayer.choosed_pawn = 0;
+			}
+		}
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
 		   glfwGetWindowParam( GLFW_OPENED ) );

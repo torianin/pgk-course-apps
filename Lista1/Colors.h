@@ -8,12 +8,14 @@
 // Include GLEW
 #include <GL/glew.h>
 
+#include "Options.hpp"
+
 using namespace std;
 class Colors
 {
 public:
 	Colors(void);
 	~Colors(void);
-	GLuint* randomlySelectedColors(void);
+	GLuint* generatedColors(void);
 };
 

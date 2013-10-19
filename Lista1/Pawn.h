@@ -4,6 +4,7 @@
 
 // Include GLEW
 #include <GL/glew.h>
+#include "Options.hpp"
 
 class Pawn
 {

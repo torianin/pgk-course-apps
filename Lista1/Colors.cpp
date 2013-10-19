@@ -11,32 +11,52 @@ Colors::~Colors(void)
 {
 }
 
-GLuint* Colors::randomlySelectedColors(void)
+GLuint* Colors::generatedColors(void)
 {
-	static GLfloat firstObiectColor[11*3];
-
-	for (int v = 0; v < 11*3 ; v++){
-		firstObiectColor[3*v+0] = 1.0;
-		firstObiectColor[3*v+1] = 0.0;
-		firstObiectColor[3*v+2] = 0.0;
-	}
+	static GLfloat colors[7][33];
 	
-	static GLfloat secondObiectColor[11*3];
-
-	for (int v = 0; v < 11*3 ; v++){
-		secondObiectColor[3*v+0] = 0.0;
-		secondObiectColor[3*v+1] = 1.0;
-		secondObiectColor[3*v+2] = 0.0;
+	for (int o = 0; o < 7 ; o ++){
+		for (int v = 0; v < 33 ; v++){
+			if (o == 0){
+				colors[o][3*v+0] = 1.0;
+				colors[o][3*v+1] = 0.0;
+				colors[o][3*v+2] = 0.0;
+			} else if ( o == 1) {
+				colors[o][3*v+0] = 0.0;
+				colors[o][3*v+1] = 1.0;
+				colors[o][3*v+2] = 0.0;
+			} else if ( o == 2) {
+				colors[o][3*v+0] = 1.0;
+				colors[o][3*v+1] = 1.0;
+				colors[o][3*v+2] = 1.0;
+			} else if ( o == 3) {
+				colors[o][3*v+0] = 0.0;
+				colors[o][3*v+1] = 0.0;
+				colors[o][3*v+2] = 1.0;
+			} else if ( o == 4) {
+				colors[o][3*v+0] = 1.0;
+				colors[o][3*v+1] = 1.0;
+				colors[o][3*v+2] = 0.0;
+			} else if ( o == 5) {
+				colors[o][3*v+0] = 0.0;
+				colors[o][3*v+1] = 1.0;
+				colors[o][3*v+2] = 1.0;
+			} else if ( o == 6) {
+				colors[o][3*v+0] = 0.0;
+				colors[o][3*v+1] = 0.0;
+				colors[o][3*v+2] = 0.0;
+			}
+		}
 	}
 
-	GLuint colorbuffer[2];
 
-	glGenBuffers(2, colorbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(firstObiectColor), firstObiectColor, GL_STATIC_DRAW);
+	GLuint colorbuffer[7];
+	glGenBuffers(7, colorbuffer);
 
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(secondObiectColor), secondObiectColor, GL_STATIC_DRAW);
+	for (int o = 0; o < 7 ; o ++){
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[o]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(colors[o]), colors[o], GL_STATIC_DRAW);
+	}
 
 	return colorbuffer;
 }

@@ -1,0 +1,16 @@
+#pragma once
+#define GLFW_KEY_1 49
+#define GLFW_KEY_2 50
+#define GLFW_KEY_3 51
+#define GLFW_KEY_4 52
+#define GLFW_KEY_5 53
+#define GLFW_KEY_6 54
+
+enum {
+    ROWS = 8,
+    COLUMNS = 4,
+	PLAYER_FIGURES = ROWS*COLUMNS,
+	CHECK_ROWS = 16,
+	CHECK_COLUMNS = 2,
+	FIGURES = ROWS*COLUMNS+CHECK_ROWS*CHECK_COLUMNS
+ };

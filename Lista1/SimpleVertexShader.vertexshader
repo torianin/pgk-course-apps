@@ -10,7 +10,7 @@ out vec3 fragmentColor;
 void main(){
 
     gl_Position.xyz = vertexPosition_modelspace;
-    gl_Position.w = 1.0;
+    gl_Position.w = 1.5;
 
 	fragmentColor = vertexColor;
 }
