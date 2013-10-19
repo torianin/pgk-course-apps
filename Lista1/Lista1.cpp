@@ -58,27 +58,6 @@ int main( void )
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
 
-
-	static GLfloat g_vertex_buffer_data[] = { 
-		0.0f, 0.0f, 0.0f,
-		0.075f, -0.075f, 0.0f,
-		0.10f, 0.0f, 0.0f,
-		0.075f, 0.075f, 0.0f,
-		0.0f, 0.10f, 0.0f, 
-		0.0f, 0.10f, 0.0f, 
-		-0.075f, 0.075f, 0.0f,
-		-0.10f, 0.0f, 0.0f,
-		-0.075f, -0.075f, 0.0f,
-		0.0f, -0.10f, 0.0f,
-		0.075f, -0.075f, 0.0f,
-	};
-
-
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-		
 	do{
 
 		// Clear the screen
@@ -89,7 +68,7 @@ int main( void )
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.positionOfPawns()[0]);
 		glVertexAttribPointer(
 			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
@@ -98,10 +77,10 @@ int main( void )
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
-
+		
 		// 2nd attribute buffer : colors
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.randomlySelectedColors());
+		glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.randomlySelectedColors()[0]);
 		glVertexAttribPointer(
 			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 			3,                                // size
@@ -111,8 +90,34 @@ int main( void )
 			(void*)0                          // array buffer offset
 		);
 
-		// Draw the triangle !
+
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
+
+		glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.positionOfPawns()[1]);
+		glVertexAttribPointer(
+			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+		
+		// 2nd attribute buffer : colors
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.randomlySelectedColors()[1]);
+		glVertexAttribPointer(
+			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+			3,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+
+
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
+
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 
@@ -127,7 +132,7 @@ int main( void )
 	glfwTerminate();
 
 	// Cleanup VBO
-	glDeleteBuffers(1, &vertexbuffer);
+	//glDeleteBuffers(1, &vertexbuffer);
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 

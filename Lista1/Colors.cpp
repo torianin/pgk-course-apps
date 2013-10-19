@@ -3,21 +3,7 @@
 
 Colors::Colors(void)
 {
-	srand (time(NULL));
-	cout << "Wylosowano kolory" << endl;
-	static float firstColor = (rand() % 100)/100.0;
-	static float secondColor = (rand() % 100)/100.0;
-	static float lastColor = (rand() % 100)/100.0;
 
-	cout << firstColor << endl;
-	cout << secondColor << endl;
-	cout << lastColor << endl;
-
-	for (int v = 0; v < 11*3 ; v++){
-		g_color_buffer_data[3*v+0] = 1.0;
-		g_color_buffer_data[3*v+1] = 0.0;
-		g_color_buffer_data[3*v+2] = 0.0;
-	}
 }
 	
 
@@ -25,13 +11,32 @@ Colors::~Colors(void)
 {
 }
 
-GLuint Colors::randomlySelectedColors(void)
+GLuint* Colors::randomlySelectedColors(void)
 {
+	static GLfloat firstObiectColor[11*3];
 
-	GLuint colorbuffer;
-	glGenBuffers(1, &colorbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+	for (int v = 0; v < 11*3 ; v++){
+		firstObiectColor[3*v+0] = 1.0;
+		firstObiectColor[3*v+1] = 0.0;
+		firstObiectColor[3*v+2] = 0.0;
+	}
+	
+	static GLfloat secondObiectColor[11*3];
+
+	for (int v = 0; v < 11*3 ; v++){
+		secondObiectColor[3*v+0] = 0.0;
+		secondObiectColor[3*v+1] = 1.0;
+		secondObiectColor[3*v+2] = 0.0;
+	}
+
+	GLuint colorbuffer[2];
+
+	glGenBuffers(2, colorbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(firstObiectColor), firstObiectColor, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(secondObiectColor), secondObiectColor, GL_STATIC_DRAW);
 
 	return colorbuffer;
 }

@@ -14,10 +14,6 @@ class Colors
 public:
 	Colors(void);
 	~Colors(void);
-	GLuint randomlySelectedColors(void);
-	
-private:
-	vector<string> colors;
-	GLfloat g_color_buffer_data[11*3];
+	GLuint* randomlySelectedColors(void);
 };
 
