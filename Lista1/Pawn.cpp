@@ -26,7 +26,7 @@ Pawn::~Pawn(void)
 {
 }
 
-GLuint* Pawn::positionOfPawns(void)
+void Pawn::positionOfPawns(void)
 {
 	for(int r = 0; r < ROWS ; r++){
 		for (int c = 0; c < COLUMNS ; c++){
@@ -54,6 +54,9 @@ GLuint* Pawn::positionOfPawns(void)
 			glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[f]);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(objects[f]), objects[f], GL_STATIC_DRAW);
 	}
+}
 
+GLuint* Pawn::getPositionOfPawns(void)
+{
 	return vertexbuffer;
 }

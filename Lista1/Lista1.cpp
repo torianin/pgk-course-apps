@@ -61,7 +61,7 @@ int main( void )
 
 	game.gameColors.makeRandomColors();
 	game.gameColors.generatedColors();
-
+	game.gamePawn.positionOfPawns();
 	static  GLfloat board[] = { 
 		-0.92f, -0.93f, 0.0f,
 		 0.33f, -0.93f, 0.0f,
@@ -131,9 +131,6 @@ int main( void )
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
-
-		// Swap buffers
-		glfwSwapBuffers();
 		
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -163,13 +160,10 @@ int main( void )
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 
-		// Swap buffers
-		glfwSwapBuffers();
-
 		for(int f = 0; f < FIGURES ; f++){
 			// 1rst attribute buffer : vertices
 			glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.positionOfPawns()[f]);
+			glBindBuffer(GL_ARRAY_BUFFER, game.gamePawn.getPositionOfPawns()[f]);
 			glVertexAttribPointer(
 				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 				3,                  // size
@@ -197,10 +191,11 @@ int main( void )
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
 
-			// Swap buffers
-			glfwSwapBuffers();
 		}
-		
+
+		// Swap buffers
+		glfwSwapBuffers();
+
 		// Strafe right
 		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
 			if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_RELEASE){
@@ -311,7 +306,7 @@ int main( void )
 	glfwTerminate();
 
 	// Cleanup VBO
-	glDeleteBuffers(FIGURES, game.gamePawn.positionOfPawns());
+	glDeleteBuffers(FIGURES, game.gamePawn.getPositionOfPawns());
 	glDeleteBuffers(7, game.gameColors.getGenratedColors());
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
