@@ -2,17 +2,7 @@
 
 Pawn::Pawn(void)
 {
-
-}
-
-
-Pawn::~Pawn(void)
-{
-}
-
-GLuint* Pawn::positionOfPawns(void)
-{
-	static GLfloat g_vertex_buffer_data_template[] = { 
+	 GLfloat g_vertex_buffer_data_template_constructor[33] = {
 		0.0f, 0.0f, 0.0f,
 		0.075f, -0.075f, 0.0f,
 		0.10f, 0.0f, 0.0f,
@@ -23,11 +13,21 @@ GLuint* Pawn::positionOfPawns(void)
 		-0.10f, 0.0f, 0.0f,
 		-0.075f, -0.075f, 0.0f,
 		0.0f, -0.10f, 0.0f,
-		0.075f, -0.075f, 0.0f,
-	};
+		0.075f, -0.075f, 0.0f
+	 };
+	 for(int i = 0; i< 33; i++)
+	 {
+		 g_vertex_buffer_data_template[i] = g_vertex_buffer_data_template_constructor[i];
+	 }
+}
 
-	static GLfloat objects[FIGURES][11*3];
 
+Pawn::~Pawn(void)
+{
+}
+
+GLuint* Pawn::positionOfPawns(void)
+{
 	for(int r = 0; r < ROWS ; r++){
 		for (int c = 0; c < COLUMNS ; c++){
 			for (int v = 0; v < 11 ; v++){
@@ -42,13 +42,12 @@ GLuint* Pawn::positionOfPawns(void)
 		for (int c = 0; c < CHECK_COLUMNS ; c++){
 			for (int v = 0; v < 11 ; v++){
 				objects[PLAYER_FIGURES+(2*r)+c][3*v+0] = (g_vertex_buffer_data_template[3*v+0]+0.3+(0.25*c))/2.1;
-				objects[PLAYER_FIGURES+(2*r)+c][3*v+1] = (g_vertex_buffer_data_template[3*v+1]-1.8+(0.26*r))/2.1;
+				objects[PLAYER_FIGURES+(2*r)+c][3*v+1] = (g_vertex_buffer_data_template[3*v+1]-1.8+(0.262*r))/2.1;
 				objects[PLAYER_FIGURES+(2*r)+c][3*v+2] = g_vertex_buffer_data_template[3*v+2];
 			}
 		}
 	}
 
-	GLuint vertexbuffer[FIGURES];
 	glGenBuffers(FIGURES, vertexbuffer);
 	
 	for(int f = 0; f < FIGURES ; f++){

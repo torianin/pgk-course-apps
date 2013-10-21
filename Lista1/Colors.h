@@ -16,6 +16,13 @@ class Colors
 public:
 	Colors(void);
 	~Colors(void);
-	GLuint* generatedColors(void);
+	void generatedColors(void);
+	void makeRandomColors(void);
+	GLuint* getRandomedColors(void);
+	GLuint* getGenratedColors(void);
+private:
+	GLuint randomColors[4];
+	GLfloat colors[COLORS][75];
+	GLuint colorbuffer[COLORS];
 };
 
