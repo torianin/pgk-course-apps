@@ -10,6 +10,7 @@ Player::Player(void)
 	}
 	choosed_pawn = 0;
 	min_value = 0;
+	game = 0;
 
 	GLfloat board_constructor[] = { 
 		-0.90f, -0.91f, 0.0f,
@@ -78,7 +79,12 @@ GLuint Player::drawPlayerChoose(void)
 	return vertexbuffer;
 }
 
-void Player::endGame()
+void Player::loseGame()
 {
-	std::cout << "KONIEC :(";
+	game = LOSE_GAME;
+}
+
+void Player::winGame()
+{
+	game = LOSE_GAME;
 }

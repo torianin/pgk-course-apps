@@ -62,6 +62,7 @@ int main( void )
 	game.gameColors.makeRandomColors();
 	game.gameColors.generatedColors();
 	game.gamePawn.positionOfPawns();
+
 	static  GLfloat board[] = { 
 		-0.92f, -0.93f, 0.0f,
 		 0.33f, -0.93f, 0.0f,
@@ -81,12 +82,11 @@ int main( void )
 		-0.92f,  0.83f, 0.0f,
 		-0.92f,  1.08f, 0.0f,
 		 0.33f,  1.08f, 0.0f,
-		 0.33f,  1.33f, 0.0f,
-		-0.92f,  1.33f, 0.0f,
-		-0.92f, -0.93f, 0.0f,
 		 0.33f, -0.93f, 0.0f,
-		 0.33f,  1.33f, 0.0f,
-		 0.08f,  1.33f, 0.0f,
+		-0.92f, -0.93f, 0.0f,
+		-0.92f,  1.08f, 0.0,
+		 0.33f,  1.08f, 0.0,
+		 0.08f,  1.08f, 0.0f,
 		 0.08f,  -0.93f, 0.0f,
 	};
 
@@ -95,8 +95,6 @@ int main( void )
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(board), board, GL_STATIC_DRAW);
 
-	
-	
 	do{
 		// Clear the screen
 		glClear( GL_COLOR_BUFFER_BIT );
@@ -127,7 +125,7 @@ int main( void )
 				(void*)0                          // array buffer offset
 			);
 		// Draw the triangle !
-		glDrawArrays(GL_LINE_STRIP, 0, 25); // 3 indices starting at 0 -> 1 triangle
+		glDrawArrays(GL_LINE_STRIP, 0, 24); // 3 indices starting at 0 -> 1 triangle
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -292,8 +290,10 @@ int main( void )
 				if(game.gamePlayer.move < 7){
 					game.gamePlayer.moveUp();
 					game.gamePlayer.move += 1;
-				} else {
-					game.gamePlayer.endGame();
+				}else if(very_good == 4){
+					game.gamePlayer.winGame();
+				}else {
+					game.gamePlayer.loseGame();
 				}
 			}
 		}

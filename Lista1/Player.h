@@ -17,12 +17,14 @@ public:
 	int min_value;
 	int player_colors[6];
 	int randomed_colors[6];
-
+	int game;
 	GLuint drawPlayerChoose(void);
 	void moveRight();
 	void moveLeft();
 	void moveUp();
-	void endGame();
+	void winGame();
+	void loseGame();
+
 private:
 	GLfloat board[15];
 	GLfloat board_template[15];
