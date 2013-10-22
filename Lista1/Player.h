@@ -24,6 +24,7 @@ public:
 	void moveUp();
 	void winGame();
 	void loseGame();
+	GLuint* Player::drawHappySmile();
 
 private:
 	GLfloat board[15];

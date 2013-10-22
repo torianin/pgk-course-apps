@@ -28,6 +28,7 @@ Pawn::~Pawn(void)
 
 void Pawn::positionOfPawns(void)
 {
+	//Du¿e pionki
 	for(int r = 0; r < ROWS ; r++){
 		for (int c = 0; c < COLUMNS ; c++){
 			for (int v = 0; v < 11 ; v++){
@@ -37,7 +38,7 @@ void Pawn::positionOfPawns(void)
 			}
 		}
 	}
-
+	//Ma³e pinki
 	for(int r = 0; r < CHECK_ROWS ; r++){
 		for (int c = 0; c < CHECK_COLUMNS ; c++){
 			for (int v = 0; v < 11 ; v++){

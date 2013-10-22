@@ -17,5 +17,6 @@ enum {
 	COLORS = 9,
 	WIN_GAME = 2,
 	LOSE_GAME = 1,
-	GAME = 0
+	GAME = 0,
+	COLORED_VERTICLES = 35
  };

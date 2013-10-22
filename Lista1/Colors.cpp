@@ -28,7 +28,7 @@ void Colors::generatedColors(void)
 {
 
 	for (int o = 0; o < COLORS ; o ++){
-		for (int v = 0; v < 25 ; v++){
+		for (int v = 0; v < COLORED_VERTICLES ; v++){
 			if (o == 0){
 				colors[o][3*v+0] = 1.0;
 				colors[o][3*v+1] = 0.0;

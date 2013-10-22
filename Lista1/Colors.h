@@ -22,7 +22,7 @@ public:
 	GLuint* getGenratedColors(void);
 private:
 	GLuint randomColors[4];
-	GLfloat colors[COLORS][75];
+	GLfloat colors[COLORS][COLORED_VERTICLES*3];
 	GLuint colorbuffer[COLORS];
 };
 

@@ -115,21 +115,22 @@ int main( void )
 		);
 
 		glEnableVertexAttribArray(1);
-			glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.getGenratedColors()[7]);
-			glVertexAttribPointer(
-				1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-				3,                                // size
-				GL_FLOAT,                         // type
-				GL_FALSE,                         // normalized?
-				0,                                // stride
-				(void*)0                          // array buffer offset
-			);
+		glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.getGenratedColors()[7]);
+		glVertexAttribPointer(
+			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+			3,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
 		// Draw the triangle !
 		glDrawArrays(GL_LINE_STRIP, 0, 24); // 3 indices starting at 0 -> 1 triangle
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
-		
+	
+		//Draw player choose
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, game.gamePlayer.drawPlayerChoose());
@@ -190,6 +191,90 @@ int main( void )
 			glDisableVertexAttribArray(1);
 
 		}
+		if(game.gamePlayer.game != 0){
+			// Draw smile
+					// 1rst attribute buffer : vertices
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, game.gamePlayer.drawHappySmile()[0]);
+			glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				(void*)0            // array buffer offset
+			);
+
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.getGenratedColors()[7]);
+			glVertexAttribPointer(
+				1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+				3,                                // size
+				GL_FLOAT,                         // type
+				GL_FALSE,                         // normalized?
+				0,                                // stride
+				(void*)0                          // array buffer offset
+			);
+			// Draw the triangle !
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
+		
+			glEnableVertexAttribArray(0);
+			if(game.gamePlayer.game == WIN_GAME){
+				glBindBuffer(GL_ARRAY_BUFFER, game.gamePlayer.drawHappySmile()[1]);
+			} else if(game.gamePlayer.game == LOSE_GAME){
+				glBindBuffer(GL_ARRAY_BUFFER, game.gamePlayer.drawHappySmile()[4]);
+			}
+			glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				(void*)0            // array buffer offset
+			);
+
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.getGenratedColors()[0]);
+			glVertexAttribPointer(
+				1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+				3,                                // size
+				GL_FLOAT,                         // type
+				GL_FALSE,                         // normalized?
+				0,                                // stride
+				(void*)0                          // array buffer offset
+			);
+		
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
+
+			for(int i=2; i<4; i++){
+				glEnableVertexAttribArray(0);
+				glBindBuffer(GL_ARRAY_BUFFER, game.gamePlayer.drawHappySmile()[i]);
+				glVertexAttribPointer(
+					0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+					3,                  // size
+					GL_FLOAT,           // type
+					GL_FALSE,           // normalized?
+					0,                  // stride
+					(void*)0            // array buffer offset
+				);
+
+				glEnableVertexAttribArray(1);
+				glBindBuffer(GL_ARRAY_BUFFER, game.gameColors.getGenratedColors()[6]);
+				glVertexAttribPointer(
+					1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+					3,                                // size
+					GL_FLOAT,                         // type
+					GL_FALSE,                         // normalized?
+					0,                                // stride
+					(void*)0                          // array buffer offset
+				);
+		
+				glDrawArrays(GL_TRIANGLE_FAN, 0, 11); // 3 indices starting at 0 -> 1 triangle
+			}
+			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(1);
+		}
+
 
 		// Swap buffers
 		glfwSwapBuffers();
@@ -285,14 +370,15 @@ int main( void )
 				{
 					game.gamePlayer.colors[32+i+game.gamePlayer.min_value]=2;
 				}
+				if(very_good == 4){
+					game.gamePlayer.winGame();
+				}
 				game.gamePlayer.min_value += 4;
 				game.gamePlayer.choosed_pawn = 0;
 				if(game.gamePlayer.move < 7){
 					game.gamePlayer.moveUp();
 					game.gamePlayer.move += 1;
-				}else if(very_good == 4){
-					game.gamePlayer.winGame();
-				}else {
+				} else {
 					game.gamePlayer.loseGame();
 				}
 			}

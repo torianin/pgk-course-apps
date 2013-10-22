@@ -86,5 +86,85 @@ void Player::loseGame()
 
 void Player::winGame()
 {
-	game = LOSE_GAME;
+	game = WIN_GAME;
+}
+
+GLuint* Player::drawHappySmile()
+{
+	GLfloat smile[] = { 
+		0.0f, 0.0f, 0.0f,
+		0.75f, -0.75f, 0.0f,
+		1.00f, 0.0f, 0.0f,
+		0.75f, 0.75f, 0.0f,
+		0.0f, 1.00f, 0.0f, 
+		0.0f, 1.00f, 0.0f, 
+		-0.75f, 0.75f, 0.0f,
+		-1.00f, 0.0f, 0.0f,
+		-0.75f, -0.75f, 0.0f,
+		0.0f, -1.00f, 0.0f,
+		0.75f, -0.75f, 0.0f
+	};
+		
+	GLfloat happy[] = { 
+		0.0f, 0.0f, 0.0f,
+		0.50f, -0.50f, 0.0f,
+		0.75f, 0.0f, 0.0f,
+		-0.75f, 0.0f, 0.0f,
+		-0.50f, -0.50f, 0.0f,
+		0.0f, -0.75f, 0.0f,
+		0.50f, -0.50f, 0.0f
+	};
+	
+	GLfloat sad[] = { 
+		0.0f, -0.50f, 0.0f,
+		0.50f, 0.0f, 0.0f,
+		0.75f, -0.50f, 0.0f,
+		-0.75f, -0.50f, 0.0f,
+		-0.50f, 0.0f, 0.0f,
+		0.0f, 0.25f, 0.0f,
+		0.50f, 0.0f, 0.0f
+
+	};
+
+	GLfloat eye[] = {
+		0.0f, 0.0f, 0.0f,
+		0.075f, -0.075f, 0.0f,
+		0.10f, 0.0f, 0.0f,
+		0.075f, 0.075f, 0.0f,
+		0.0f, 0.10f, 0.0f, 
+		0.0f, 0.10f, 0.0f, 
+		-0.075f, 0.075f, 0.0f,
+		-0.10f, 0.0f, 0.0f,
+		-0.075f, -0.075f, 0.0f,
+		0.0f, -0.10f, 0.0f,
+		0.075f, -0.075f, 0.0f
+	 };
+
+	GLfloat eye2[33];
+	
+	for (int v = 0; v < 11 ; v++){
+		eye[3*v+0] = eye[3*v+0]+0.5;
+		eye[3*v+1] = eye[3*v+1]+0.4;
+		eye[3*v+2] = eye[3*v+2];
+	}
+
+	for (int v = 0; v < 11 ; v++){
+		eye2[3*v+0] = eye[3*v+0]-1.0;
+		eye2[3*v+1] = eye[3*v+1];
+		eye2[3*v+2] = eye[3*v+2];
+	}
+
+	GLuint vertexbuffer[5];
+	glGenBuffers(5, vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(smile), smile, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(happy), happy, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(eye), eye, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(eye2), eye2, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[4]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(sad), sad, GL_STATIC_DRAW);
+	return vertexbuffer;
 }
