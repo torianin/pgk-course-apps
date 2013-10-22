@@ -159,12 +159,12 @@ GLuint* Player::drawHappySmile()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(smile), smile, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(happy), happy, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(sad), sad, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(eye), eye, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(eye2), eye2, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[4]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(sad), sad, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(happy), happy, GL_STATIC_DRAW);
 	return vertexbuffer;
 }

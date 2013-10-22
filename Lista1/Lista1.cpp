@@ -378,6 +378,8 @@ int main( void )
 				if(game.gamePlayer.move < 7){
 					game.gamePlayer.moveUp();
 					game.gamePlayer.move += 1;
+				} else if(game.gamePlayer.move == 7 && very_good == 4){
+					game.gamePlayer.winGame();
 				} else {
 					game.gamePlayer.loseGame();
 				}
