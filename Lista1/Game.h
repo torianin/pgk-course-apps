@@ -3,11 +3,8 @@
 #include "Player.h"
 #include "Pawn.h"
 
-class Game
+struct Game
 {
-public:
-	Game(void);
-	~Game(void);
 	Colors gameColors;
 	Player gamePlayer;
 	Pawn gamePawn;

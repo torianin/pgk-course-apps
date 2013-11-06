@@ -27,9 +27,6 @@
     <ClCompile Include="include\common\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files\Logic</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Logic</Filter>
     </ClCompile>

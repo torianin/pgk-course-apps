@@ -36,11 +36,6 @@ Player::Player(void)
 }
 
 
-
-Player::~Player(void)
-{
-}
-
 void Player::moveRight()
 {
 		for (int v = 0; v < 5 ; v++){

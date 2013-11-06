@@ -15,7 +15,6 @@ class Colors
 {
 public:
 	Colors(void);
-	~Colors(void);
 	void generatedColors(void);
 	void makeRandomColors(void);
 	GLuint* getRandomedColors(void);

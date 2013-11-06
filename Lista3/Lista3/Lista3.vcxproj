@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{496869EF-C378-4E83-A0E9-0F412A96E135}</ProjectGuid>
+    <ProjectGuid>{FACC83F0-5B38-4910-8EEE-5892916674D5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Lista1</RootNamespace>
+    <RootNamespace>Lista3</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)/libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -79,23 +79,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Colors.cpp" />
-    <ClCompile Include="include\common\shader.cpp" />
-    <ClCompile Include="Lista1.cpp" />
-    <ClCompile Include="Pawn.cpp" />
-    <ClCompile Include="Player.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader" />
     <None Include="SimpleVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Colors.h" />
-    <ClInclude Include="Options.hpp" />
-    <ClInclude Include="Game.h" />
+    <ClCompile Include="include\common\shader.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="include\common\shader.hpp" />
-    <ClInclude Include="Pawn.h" />
-    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

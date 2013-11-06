@@ -7,10 +7,6 @@ Colors::Colors(void)
 }
 	
 
-Colors::~Colors(void)
-{
-}
-
 void Colors::makeRandomColors(void)
 {
 	for(int i =0; i < 4; i++){

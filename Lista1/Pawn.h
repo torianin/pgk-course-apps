@@ -10,7 +10,6 @@ class Pawn
 {
 public:
 	Pawn(void);
-	~Pawn(void);
 	void positionOfPawns(void);
 	GLuint* getPositionOfPawns(void);
 	GLfloat g_vertex_buffer_data_template[33];

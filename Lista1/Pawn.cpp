@@ -21,11 +21,6 @@ Pawn::Pawn(void)
 	 }
 }
 
-
-Pawn::~Pawn(void)
-{
-}
-
 void Pawn::positionOfPawns(void)
 {
 	//Du¿e pionki
