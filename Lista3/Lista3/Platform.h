@@ -2,10 +2,10 @@
 
 #include "Figure.h"
 
-class Ball : public Figure
+class Platform : public Figure
 {
 public:
-	Ball(void);
+	Platform(void);
 private:
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;

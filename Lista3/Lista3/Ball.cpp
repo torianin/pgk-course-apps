@@ -29,20 +29,13 @@ Ball::Ball(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(GLfloat), vectors.data(), GL_STATIC_DRAW);
 
-	for (std::vector<float>::iterator it = vectors.begin(); it != vectors.end(); ++it)
-		colors.push_back(0.05f);
+	for (unsigned int i=0; i < (vectors.size()*sizeof(GLfloat))/2; i++){
+		colors.push_back(0.0f);
+		colors.push_back(0.0f);
+		colors.push_back(0.0f);
+	}
 
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
-}
-
-GLuint Ball::getVertexBuffer(void)
-{
-	return vertexbuffer;
-}
-
-GLuint Ball::getColorBuffer(void)
-{
-	return colorbuffer;
 }

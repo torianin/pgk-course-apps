@@ -10,7 +10,7 @@
 
 #include <common/shader.hpp>
 
-#include "Ball.h"
+#include "Config.h"
 
 int main( void )
 {
@@ -55,50 +55,56 @@ int main( void )
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
-
+		
+	std::vector<Figure> figures;
 	Ball ball;
+	figures.push_back(ball);
+	Platform platform;
+	figures.push_back(platform);
+
 
 	do{
-
 		// Clear the screen
 		glClear( GL_COLOR_BUFFER_BIT );
 
 		// Use our shader
 		glUseProgram(programID);
 
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, ball.getVertexBuffer());
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			2,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
+		for (std::vector<Figure>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
 
-		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, ball.getColorBuffer());
-		glVertexAttribPointer(
-			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			2,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
+			// 1rst attribute buffer : vertices
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, figure->getVertexBuffer() );
+			glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				2,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				(void*)0            // array buffer offset
+			);
 
-		//draw circle contours (skip center vertex at start of buffer)
-		//glDrawArrays(GL_LINE_LOOP, 2, 59);
+			// 2nd attribute buffer : colors
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, figure->getColorBuffer() );
+			glVertexAttribPointer(
+				1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+				3,                                // size
+				GL_FLOAT,                         // type
+				GL_FALSE,                         // normalized?
+				0,                                // stride
+				(void*)0                          // array buffer offset
+			);
 
-		//draw circle as filled shape
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 60);
+			//draw circle contours (skip center vertex at start of buffer)
+			//glDrawArrays(GL_LINE_LOOP, 2, 59);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+			//draw circle as filled shape
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 60);
 
+			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(1);
+		}
 		// Swap buffers
 		glfwSwapBuffers();
 
