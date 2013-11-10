@@ -12,6 +12,8 @@
 
 #include "Config.h"
 
+#include <glm/glm.hpp>
+
 int main( void )
 {
 	// Initialise GLFW
@@ -56,12 +58,14 @@ int main( void )
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
 		
-	std::vector<Figure> figures;
+	// Get a handle for our "MVP" uniform
+	GLint vectorID = glGetUniformLocation(programID, "Move");
+	
+	std::vector<Figure*> figures;
 	Ball ball;
-	figures.push_back(ball);
+	figures.push_back(&ball);
 	Platform platform;
-	figures.push_back(platform);
-
+	figures.push_back(&platform);
 
 	do{
 		// Clear the screen
@@ -69,12 +73,14 @@ int main( void )
 
 		// Use our shader
 		glUseProgram(programID);
-
-		for (std::vector<Figure>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
+		
+		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
+			
+			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update());
 
 			// 1rst attribute buffer : vertices
 			glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, figure->getVertexBuffer() );
+			glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer() );
 			glVertexAttribPointer(
 				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 				2,                  // size
@@ -86,7 +92,7 @@ int main( void )
 
 			// 2nd attribute buffer : colors
 			glEnableVertexAttribArray(1);
-			glBindBuffer(GL_ARRAY_BUFFER, figure->getColorBuffer() );
+			glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getColorBuffer() );
 			glVertexAttribPointer(
 				1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 				3,                                // size
@@ -107,7 +113,7 @@ int main( void )
 		}
 		// Swap buffers
 		glfwSwapBuffers();
-
+		
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
 		   glfwGetWindowParam( GLFW_OPENED ) );

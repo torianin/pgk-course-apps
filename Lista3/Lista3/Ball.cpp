@@ -39,3 +39,13 @@ Ball::Ball(void)
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
+
+GLfloat* Ball::Update()
+{
+	changevector[0]=0.5;
+	changevector[1]=0.5;
+	changevector[2]=0.0;
+	changevector[3]=1.0;
+
+	return changevector;
+}
