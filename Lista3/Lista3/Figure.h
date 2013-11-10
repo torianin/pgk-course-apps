@@ -14,9 +14,14 @@ public:
 	Figure(void);
 	GLuint vertexbuffer;
 	GLuint colorbuffer;
+	GLuint drawmode;
+	GLuint vertexsize;
 	GLfloat changevector[4];
+
 	GLuint getVertexBuffer(void);
 	GLuint getColorBuffer(void);
+	GLuint getDrawMode(void);
+	GLuint getVertexSize(void);
 	virtual GLfloat* Update();
 };
 

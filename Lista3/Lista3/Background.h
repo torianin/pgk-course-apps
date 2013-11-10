@@ -2,14 +2,12 @@
 
 #include "Figure.h"
 
-class Ball : public Figure
+class Background : public Figure
 {
 public:
-	Ball(void);
-	virtual GLfloat* Update();
+	Background(void);
+	GLfloat* Update();
 private:
-	GLfloat dx;
-	GLfloat dy;
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;
 };

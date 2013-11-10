@@ -2,7 +2,13 @@
 
 Ball::Ball(void)
 {
-	float radius = 0.2f;
+	drawmode = 6; // GL_TRIANGLE_FAN
+	vertexsize = 15;
+
+	dx = 0;
+	dy = 0;
+
+	float radius = 0.1f;
 	float center_x = 0.0f;
 	float center_y = 0.0f;
 
@@ -11,7 +17,7 @@ Ball::Ball(void)
 	vectors.push_back(center_y);
 
 	//outer vertices of the circle
-	int outerVertexCount = 59;
+	int outerVertexCount = 14;
 
 	for (int i = 0; i < outerVertexCount; ++i){
 		float percent = (i / (float) (outerVertexCount-1));
@@ -42,8 +48,14 @@ Ball::Ball(void)
 
 GLfloat* Ball::Update()
 {
-	changevector[0]=0.5;
-	changevector[1]=0.5;
+	if( vectors[0] > 200)
+		std::cout << "Dzia³a";
+	dx = dx + 0.01;
+	dy = dy + 0.01;
+	//changevector[0]=0.0+dx;
+	changevector[0]=1.0;
+	//changevector[1]=0.0+dy;
+	changevector[1]=1.0;
 	changevector[2]=0.0;
 	changevector[3]=1.0;
 

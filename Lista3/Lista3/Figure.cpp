@@ -14,6 +14,16 @@ GLuint Figure::getColorBuffer(void)
 	return colorbuffer;
 }
 
+GLuint Figure::getDrawMode(void)
+{
+	return drawmode;
+}
+
+GLuint Figure::getVertexSize(void)
+{
+	return vertexsize;
+}
+
 GLfloat* Figure::Update()
 {
 	changevector[0]=0.0;

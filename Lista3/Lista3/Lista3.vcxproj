@@ -83,6 +83,7 @@
     <None Include="SimpleVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="include\common\shader.cpp" />
@@ -90,6 +91,7 @@
     <ClCompile Include="Platform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Figure.h" />

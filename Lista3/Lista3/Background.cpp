@@ -1,19 +1,20 @@
-#include "Platform.h"
+#include "Background.h"
 
 
-Platform::Platform(void)
+Background::Background(void)
 {
-	drawmode = 6; // GL_TRIANGLE_FAN
-	vertexsize = 4;
-
-	GLfloat buffer_data[8] = {
-		-0.1, -0.05,
-		0.1, -0.05,
-		0.1, 0.05,
-		-0.1, 0.05,
+	drawmode = 3; // GL_TRIANGLE_FAN
+	vertexsize = 5;
+	GLfloat buffer_data[10] = {
+		-0.5, -0.5,
+		0.5, -0.5,
+		0.5, 0.5,
+		-0.5, 0.5,
+		-0.5, -0.5,
 	};
 
 	for (int i = 0; i < vertexsize*2; ++i){
+		std::cout << buffer_data[i] << std::endl;
 		vectors.push_back(buffer_data[i]);	
 	}
 
@@ -30,4 +31,14 @@ Platform::Platform(void)
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
+}
+
+GLfloat* Background::Update()
+{
+	changevector[0]=0.0;
+	changevector[1]=0.0;
+	changevector[2]=0.0;
+	changevector[3]=0.0;
+
+	return changevector;
 }

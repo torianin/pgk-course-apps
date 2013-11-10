@@ -66,7 +66,8 @@ int main( void )
 	figures.push_back(&ball);
 	Platform platform;
 	figures.push_back(&platform);
-
+	Background background;
+	figures.push_back(&background);
 	do{
 		// Clear the screen
 		glClear( GL_COLOR_BUFFER_BIT );
@@ -103,10 +104,10 @@ int main( void )
 			);
 
 			//draw circle contours (skip center vertex at start of buffer)
-			//glDrawArrays(GL_LINE_LOOP, 2, 59);
+			//glDrawArrays(GL_LINE_STRIP, 2, 59);
 
 			//draw circle as filled shape
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 60);
+			glDrawArrays((*figure)->getDrawMode(), 0, (*figure)->getVertexSize());
 
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
