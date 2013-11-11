@@ -5,10 +5,12 @@ Ball::Ball(void)
 	drawmode = 6; // GL_TRIANGLE_FAN
 	vertexsize = 15;
 
-	dx = 0;
-	dy = 0;
+	dx = 0.01;
+	dy = 0.01;
+	changevector[0]=0.0;
+	changevector[1]=0.0;
 
-	float radius = 0.1f;
+	float radius = 0.05f;
 	float center_x = 0.0f;
 	float center_y = 0.0f;
 
@@ -48,16 +50,16 @@ Ball::Ball(void)
 
 GLfloat* Ball::Update()
 {
-	if( vectors[0] > 200)
-		std::cout << "Dzia³a";
-	dx = dx + 0.01;
-	dy = dy + 0.01;
-	//changevector[0]=0.0+dx;
-	changevector[0]=1.0;
-	//changevector[1]=0.0+dy;
-	changevector[1]=1.0;
+	if( changevector[0]+dx > 0.45 || changevector[0]+dx < -0.45) {
+		dx = -dx;
+	}  else if ( changevector[1]+dy < -0.45 || changevector[1]+dy > 0.70){
+		dy = -dy;
+	} 
+
+	changevector[0]=changevector[0]+dx;
+	changevector[1]=changevector[1]+dy;
 	changevector[2]=0.0;
-	changevector[3]=1.0;
+	changevector[3]=0.0;
 
 	return changevector;
 }

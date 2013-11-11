@@ -6,11 +6,11 @@ Background::Background(void)
 	drawmode = 3; // GL_TRIANGLE_FAN
 	vertexsize = 5;
 	GLfloat buffer_data[10] = {
-		-0.5, -0.5,
-		0.5, -0.5,
-		0.5, 0.5,
-		-0.5, 0.5,
-		-0.5, -0.5,
+		-0.5, -0.75,
+		0.5, -0.75,
+		0.5, 0.75,
+		-0.5, 0.75,
+		-0.5, -0.75,
 	};
 
 	for (int i = 0; i < vertexsize*2; ++i){

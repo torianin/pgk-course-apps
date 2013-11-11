@@ -7,10 +7,10 @@ Platform::Platform(void)
 	vertexsize = 4;
 
 	GLfloat buffer_data[8] = {
-		-0.1, -0.05,
-		0.1, -0.05,
-		0.1, 0.05,
-		-0.1, 0.05,
+		-0.1, -0.01,
+		0.1, -0.01,
+		0.1, 0.01,
+		-0.1, 0.01,
 	};
 
 	for (int i = 0; i < vertexsize*2; ++i){
@@ -30,4 +30,14 @@ Platform::Platform(void)
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
+}
+
+GLfloat* Platform::Update()
+{
+	changevector[0]=0.0;
+	changevector[1]=-0.70;
+	changevector[2]=0.0;
+	changevector[3]=0.0;
+
+	return changevector;
 }
