@@ -22,6 +22,6 @@ public:
 	GLuint getColorBuffer(void);
 	GLuint getDrawMode(void);
 	GLuint getVertexSize(void);
-	virtual GLfloat* Update();
+	virtual GLfloat* Update(float deltaTime);
 };
 

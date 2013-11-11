@@ -5,8 +5,8 @@ Ball::Ball(void)
 	drawmode = 6; // GL_TRIANGLE_FAN
 	vertexsize = 15;
 
-	dx = 0.01;
-	dy = 0.01;
+	dx = 0.5;
+	dy = 0.5;
 	changevector[0]=0.0;
 	changevector[1]=0.0;
 
@@ -48,16 +48,16 @@ Ball::Ball(void)
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
 
-GLfloat* Ball::Update()
+GLfloat* Ball::Update(float deltaTime)
 {
-	if( changevector[0]+dx > 0.45 || changevector[0]+dx < -0.45) {
+	if( changevector[0]+dx*deltaTime > 0.45 || changevector[0]+dx*deltaTime < -0.45) {
 		dx = -dx;
-	}  else if ( changevector[1]+dy < -0.45 || changevector[1]+dy > 0.70){
+	}  else if ( changevector[1]+dy*deltaTime < -0.45 || changevector[1]+dy*deltaTime > 0.70){
 		dy = -dy;
 	} 
 
-	changevector[0]=changevector[0]+dx;
-	changevector[1]=changevector[1]+dy;
+	changevector[0]=changevector[0] + dx * deltaTime;
+	changevector[1]=changevector[1] + dy * deltaTime;
 	changevector[2]=0.0;
 	changevector[3]=0.0;
 

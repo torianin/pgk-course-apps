@@ -6,6 +6,9 @@ Platform::Platform(void)
 	drawmode = 6; // GL_TRIANGLE_FAN
 	vertexsize = 4;
 
+	dx = 0.01;
+	changevector[0]=0.0;
+
 	GLfloat buffer_data[8] = {
 		-0.1, -0.01,
 		0.1, -0.01,
@@ -32,9 +35,9 @@ Platform::Platform(void)
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
 
-GLfloat* Platform::Update()
+GLfloat* Platform::Update(float deltaTime)
 {
-	changevector[0]=0.0;
+	changevector[0]=dx;
 	changevector[1]=-0.70;
 	changevector[2]=0.0;
 	changevector[3]=0.0;

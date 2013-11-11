@@ -61,6 +61,10 @@ int main( void )
 	// Get a handle for our "MVP" uniform
 	GLint vectorID = glGetUniformLocation(programID, "Move");
 	
+	double lastTime = 0;
+	double currentTime;
+	float deltaTime;
+
 	std::vector<Figure*> figures;
 	Ball ball;
 	figures.push_back(&ball);
@@ -68,7 +72,12 @@ int main( void )
 	figures.push_back(&platform);
 	Background background;
 	figures.push_back(&background);
+
+
 	do{
+		currentTime  = glfwGetTime();
+		deltaTime = float(currentTime - lastTime);
+
 		// Clear the screen
 		glClear( GL_COLOR_BUFFER_BIT );
 
@@ -77,7 +86,7 @@ int main( void )
 		
 		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
 			
-			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update());
+			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update(deltaTime));
 
 			// 1rst attribute buffer : vertices
 			glEnableVertexAttribArray(0);
@@ -114,7 +123,22 @@ int main( void )
 		}
 		// Swap buffers
 		glfwSwapBuffers();
+
+		// Strafe right
+		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
+			if(platform.dx < 0.38){
+				platform.dx+= 0.5 * deltaTime;
+			}
+		}
+		// Strafe left
+		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
+			if(platform.dx > -0.38){
+				platform.dx-= 0.5 * deltaTime;
+			}
+		}
 		
+		lastTime = currentTime;
+
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
 		   glfwGetWindowParam( GLFW_OPENED ) );

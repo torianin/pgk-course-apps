@@ -24,7 +24,7 @@ GLuint Figure::getVertexSize(void)
 	return vertexsize;
 }
 
-GLfloat* Figure::Update()
+GLfloat* Figure::Update(float deltaTime)
 {
 	changevector[0]=0.0;
 	changevector[1]=0.0;

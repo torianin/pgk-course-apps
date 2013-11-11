@@ -6,7 +6,7 @@ class Background : public Figure
 {
 public:
 	Background(void);
-	GLfloat* Update();
+	GLfloat* Update(float deltaTime);
 private:
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;

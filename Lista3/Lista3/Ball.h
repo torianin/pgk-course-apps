@@ -6,7 +6,7 @@ class Ball : public Figure
 {
 public:
 	Ball(void);
-	virtual GLfloat* Update();
+	virtual GLfloat* Update(float deltaTime);
 private:
 	GLfloat dx;
 	GLfloat dy;

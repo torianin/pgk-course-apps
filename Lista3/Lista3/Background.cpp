@@ -3,19 +3,46 @@
 
 Background::Background(void)
 {
-	drawmode = 3; // GL_TRIANGLE_FAN
-	vertexsize = 5;
-	GLfloat buffer_data[10] = {
-		-0.5, -0.75,
-		0.5, -0.75,
-		0.5, 0.75,
-		-0.5, 0.75,
-		-0.5, -0.75,
-	};
+	drawmode = 1; // GL_TRIANGLE_FAN
+	vertexsize = 12*29*25;
 
-	for (int i = 0; i < vertexsize*2; ++i){
-		std::cout << buffer_data[i] << std::endl;
-		vectors.push_back(buffer_data[i]);	
+	float radius = 0.05f;
+
+	//outer vertices of the circle
+	int outerVertexCount = 7;
+	float center_x;
+	float center_y = 0.0;
+	
+	for (int k = 1; k < 25; ++k){
+		for (int j = 0; j < 29; ++j){
+			
+			center_x = 0.075f*j;
+
+			if(j % 2 == 0){
+				center_y = 0.09f * k;
+			} else {
+				center_y = 0.09f * k + 0.047f;
+			}
+
+			for (int i = 0; i < outerVertexCount; ++i){
+				float percent = (i / (float) (outerVertexCount-1));
+				float rad = percent * 2 * 3.14159265358979323846;
+
+				//vertex position
+				float outer_x = center_x + radius * cos(rad);
+				float outer_y = center_y + radius * sin(rad);
+
+				if(i == 0 || i == 6){
+					vectors.push_back(outer_x );
+					vectors.push_back(outer_y );
+				} else {
+					vectors.push_back(outer_x );
+					vectors.push_back(outer_y );
+					vectors.push_back(outer_x );
+					vectors.push_back(outer_y );
+				}
+			}
+		}
 	}
 
 	glGenBuffers(1, &vertexbuffer);
@@ -33,10 +60,10 @@ Background::Background(void)
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
 
-GLfloat* Background::Update()
+GLfloat* Background::Update(float deltaTime)
 {
-	changevector[0]=0.0;
-	changevector[1]=0.0;
+	changevector[0]=-1.0;
+	changevector[1]=-1.1;
 	changevector[2]=0.0;
 	changevector[3]=0.0;
 
