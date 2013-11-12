@@ -12,16 +12,16 @@ Background::Background(void)
 	int outerVertexCount = 7;
 	float center_x;
 	float center_y = 0.0;
-	
+	float height = sqrt(3)/2 * 0.10;
 	for (int k = 1; k < 25; ++k){
 		for (int j = 0; j < 29; ++j){
 			
 			center_x = 0.075f*j;
 
 			if(j % 2 == 0){
-				center_y = 0.09f * k;
+				center_y = height * k;
 			} else {
-				center_y = 0.09f * k + 0.047f;
+				center_y = height * k + height/2;
 			}
 
 			for (int i = 0; i < outerVertexCount; ++i){
@@ -50,9 +50,9 @@ Background::Background(void)
 	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(GLfloat), vectors.data(), GL_STATIC_DRAW);
 
 	for (unsigned int i=0; i < (vectors.size()*sizeof(GLfloat))/2; i++){
-		colors.push_back(1.0f);
-		colors.push_back(0.0f);
-		colors.push_back(0.0f);
+		colors.push_back(0.3f);
+		colors.push_back(0.3f);
+		colors.push_back(0.3f);
 	}
 
 	glGenBuffers(1, &colorbuffer);

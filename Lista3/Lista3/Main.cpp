@@ -45,20 +45,19 @@ int main( void )
 
 	glfwSetWindowTitle( "Tutorial 02" );
 
-	// Ensure we can capture the escape key being pressed below
 	glfwEnable( GLFW_STICKY_KEYS );
 
-	// Dark blue background
+	glEnable(GL_PROGRAM_POINT_SIZE_EXT);
+    glPointSize(40);
+
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
-	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
 		
-	// Get a handle for our "MVP" uniform
 	GLint vectorID = glGetUniformLocation(programID, "Move");
 	
 	double lastTime = 0;
@@ -66,29 +65,27 @@ int main( void )
 	float deltaTime;
 
 	std::vector<Figure*> figures;
+	Background background;
+	figures.push_back(&background);
 	Ball ball;
 	figures.push_back(&ball);
 	Platform platform;
 	figures.push_back(&platform);
-	Background background;
-	figures.push_back(&background);
-
+	Blocks block;
+	figures.push_back(&block);
 
 	do{
 		currentTime  = glfwGetTime();
 		deltaTime = float(currentTime - lastTime);
 
-		// Clear the screen
 		glClear( GL_COLOR_BUFFER_BIT );
 
-		// Use our shader
 		glUseProgram(programID);
 		
 		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
 			
 			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update(deltaTime));
 
-			// 1rst attribute buffer : vertices
 			glEnableVertexAttribArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer() );
 			glVertexAttribPointer(
@@ -100,7 +97,6 @@ int main( void )
 				(void*)0            // array buffer offset
 			);
 
-			// 2nd attribute buffer : colors
 			glEnableVertexAttribArray(1);
 			glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getColorBuffer() );
 			glVertexAttribPointer(
@@ -112,25 +108,20 @@ int main( void )
 				(void*)0                          // array buffer offset
 			);
 
-			//draw circle contours (skip center vertex at start of buffer)
-			//glDrawArrays(GL_LINE_STRIP, 2, 59);
-
-			//draw circle as filled shape
 			glDrawArrays((*figure)->getDrawMode(), 0, (*figure)->getVertexSize());
 
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
 		}
-		// Swap buffers
+
 		glfwSwapBuffers();
 
-		// Strafe right
 		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
 			if(platform.dx < 0.38){
 				platform.dx+= 0.5 * deltaTime;
 			}
 		}
-		// Strafe left
+
 		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
 			if(platform.dx > -0.38){
 				platform.dx-= 0.5 * deltaTime;
@@ -139,11 +130,10 @@ int main( void )
 		
 		lastTime = currentTime;
 
-	} // Check if the ESC key was pressed or the window was closed
+	}
 	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
 		   glfwGetWindowParam( GLFW_OPENED ) );
 
-	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
 	// Cleanup VBO and shader
