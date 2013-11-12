@@ -27,7 +27,7 @@ int main( void )
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if( !glfwOpenWindow( 800, 800, 0,0,0,0, 32,0, GLFW_WINDOW ) )
+	if( !glfwOpenWindow( 600, 600, 0,0,0,0, 32,0, GLFW_WINDOW ) )
 	{
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
@@ -68,8 +68,19 @@ int main( void )
 	figures.push_back(&ball);
 	Platform platform;
 	figures.push_back(&platform);
-	Blocks block;
-	figures.push_back(&block);
+	Blocks blocks;
+	figures.push_back(&blocks);
+
+	
+	std::vector<Figure> block_figures;
+	for (int j = -2; j < 3; j++){
+		for( int i = 0; i< 5 ; i++){
+			Block block((j*(0.3)),(i*(0.2)));
+			block_figures.push_back(block);
+			// Debug
+			//figures.push_back(block);
+		}
+	}
 
 	do{
 		currentTime  = glfwGetTime();
@@ -83,9 +94,16 @@ int main( void )
 			
 			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update(deltaTime));
 			
-			if(ball.Collision(deltaTime, platform) == true) {
+			if(ball.Collision(deltaTime, platform)) {
 				ball.ChangeMoveY();
 				ball.Update(deltaTime);
+			}
+
+			for (std::vector<Figure>::iterator block = block_figures.begin(); block != block_figures.end(); ++block){
+				if(ball.Collision(deltaTime, *block)) {
+					ball.ChangeMoveY();
+					ball.Update(deltaTime);
+				}
 			}
 
 			glEnableVertexAttribArray(0);
@@ -119,14 +137,14 @@ int main( void )
 		glfwSwapBuffers();
 
 		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
-			if(platform.dx < 0.38){
-				platform.dx+= 0.5 * deltaTime;
+			if(platform.dx < 0.75){
+				platform.dx+= 0.5 * deltaTime * 2;
 			}
 		}
 
 		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
-			if(platform.dx > -0.38){
-				platform.dx-= 0.5 * deltaTime;
+			if(platform.dx > -0.75){
+				platform.dx-= 0.5 * deltaTime * 2;
 			}
 		}
 		

@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Blocks.cpp" />
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="include\common\shader.cpp" />
@@ -94,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="Background.h" />
     <ClInclude Include="Ball.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="Blocks.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Figure.h" />

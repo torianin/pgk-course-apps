@@ -8,7 +8,7 @@ Ball::Ball(void)
 	dx = 0.5;
 	dy = 0.5;
 	changevector[0]=0.0;
-	changevector[1]=0.0;
+	changevector[1]=-0.5;
 
 	radius = 0.05f;
 	float center_x = 0.0f;
@@ -50,9 +50,9 @@ Ball::Ball(void)
 
 GLfloat* Ball::Update(float deltaTime)
 {
-	if( changevector[0]+dx*deltaTime > 0.45 || changevector[0]+dx*deltaTime < -0.45) {
+	if( changevector[0]+dx*deltaTime > 0.95 || changevector[0]+dx*deltaTime < -0.95) {
 		dx = -dx;
-	}  else if ( changevector[1]+dy*deltaTime > 0.70){
+	}  else if ( changevector[1]+dy*deltaTime > 0.95){
 		dy = -dy;
 	} 
 
@@ -74,7 +74,7 @@ void Ball::ChangeMoveY()
 		dy = -dy;
 }
 
-bool Ball::Collision(float deltaTime, Platform rect)
+bool Ball::Collision(float deltaTime, Figure rect)
 {
 	circleDistance_x = abs(changevector[0] - rect.changevector[0]);
     circleDistance_y = abs(changevector[1] - rect.changevector[1]);

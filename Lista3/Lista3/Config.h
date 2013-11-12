@@ -5,6 +5,7 @@
 #include "Platform.h"
 #include "Background.h"
 #include "Blocks.h"
+#include "Block.h"
 
 enum {
 

@@ -9,10 +9,8 @@ Blocks::Blocks(void)
 	for (int r = 0; r < 5; ++r){	
 		for (int c = 0; c < 5; ++c){
 			vectors.push_back(c*0.3);
-			std::cout << (c*0.2) << std::endl;
 			vectors.push_back(r*0.2);
 			vectors.push_back(c*0.3+0.1);
-			std::cout << (c*0.3+0.1) << std::endl;
 			vectors.push_back(r*0.2);
 		}
 	}

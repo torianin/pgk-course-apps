@@ -17,7 +17,8 @@ public:
 	GLuint drawmode;
 	GLuint vertexsize;
 	GLfloat changevector[4];
-
+	GLfloat height;
+	GLfloat width;
 	GLuint getVertexBuffer(void);
 	GLuint getColorBuffer(void);
 	GLuint getDrawMode(void);
