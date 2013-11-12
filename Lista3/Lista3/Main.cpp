@@ -73,8 +73,8 @@ int main( void )
 
 	
 	std::vector<Figure> block_figures;
-	for (int j = -2; j < 3; j++){
-		for( int i = 0; i< 5 ; i++){
+	for( int i = 0; i< 5 ; i++){
+		for (int j = -2; j < 3; j++){
 			Block block((j*(0.3)),(i*(0.2)));
 			block_figures.push_back(block);
 			// Debug
@@ -98,12 +98,18 @@ int main( void )
 				ball.ChangeMoveY();
 				ball.Update(deltaTime);
 			}
-
-			for (std::vector<Figure>::iterator block = block_figures.begin(); block != block_figures.end(); ++block){
+			unsigned int removeID = 0;
+			for (std::vector<Figure>::iterator block = block_figures.begin(); block != block_figures.end();){
 				if(ball.Collision(deltaTime, *block)) {
 					ball.ChangeMoveY();
 					ball.Update(deltaTime);
+					block = block_figures.erase(block);
+					std::cout << removeID << std::endl;
+					blocks.UpdateBuffer(removeID);
+				} else {
+					++block;
 				}
+				removeID++;
 			}
 
 			glEnableVertexAttribArray(0);
