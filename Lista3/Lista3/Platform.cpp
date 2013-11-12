@@ -9,6 +9,8 @@ Platform::Platform(void)
 	dx = 0.01;
 	changevector[0]=0.0;
 
+	height = 0.02;
+	width = 0.2;
 	GLfloat buffer_data[8] = {
 		-0.1, -0.01,
 		0.1, -0.01,

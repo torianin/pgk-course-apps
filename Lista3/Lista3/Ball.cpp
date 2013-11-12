@@ -10,7 +10,7 @@ Ball::Ball(void)
 	changevector[0]=0.0;
 	changevector[1]=0.0;
 
-	float radius = 0.05f;
+	radius = 0.05f;
 	float center_x = 0.0f;
 	float center_y = 0.0f;
 
@@ -52,7 +52,7 @@ GLfloat* Ball::Update(float deltaTime)
 {
 	if( changevector[0]+dx*deltaTime > 0.45 || changevector[0]+dx*deltaTime < -0.45) {
 		dx = -dx;
-	}  else if ( changevector[1]+dy*deltaTime < -0.45 || changevector[1]+dy*deltaTime > 0.70){
+	}  else if ( changevector[1]+dy*deltaTime > 0.70){
 		dy = -dy;
 	} 
 
@@ -62,4 +62,29 @@ GLfloat* Ball::Update(float deltaTime)
 	changevector[3]=0.0;
 
 	return changevector;
+}
+
+void Ball::ChangeMoveX()
+{
+		dx = -dx;
+}
+
+void Ball::ChangeMoveY()
+{
+		dy = -dy;
+}
+
+bool Ball::Collision(float deltaTime, Platform rect)
+{
+	circleDistance_x = abs(changevector[0] - rect.changevector[0]);
+    circleDistance_y = abs(changevector[1] - rect.changevector[1]);
+    if (circleDistance_x > (rect.width/2 + radius)) { return false; }
+    if (circleDistance_y > (rect.height/2 + radius)) { return false; }
+
+    if (circleDistance_x <= (rect.width/2)) { return true; } 
+    if (circleDistance_y <= (rect.height/2)) { return true; }
+
+    cornerDistance_sq = pow((circleDistance_x - rect.width/2), 2.0)+ pow((circleDistance_y - rect.height/2), 2.0);
+
+    return (cornerDistance_sq <= pow(radius,2.0));
 }

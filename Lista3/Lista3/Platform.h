@@ -8,6 +8,8 @@ public:
 	Platform(void);
 	GLfloat* Update(float deltaTime);
 	GLfloat dx;
+	GLfloat height;
+	GLfloat width;
 private:
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;

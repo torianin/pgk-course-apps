@@ -16,7 +16,6 @@
 
 int main( void )
 {
-	// Initialise GLFW
 	if( !glfwInit() )
 	{
 		fprintf( stderr, "Failed to initialize GLFW\n" );
@@ -28,7 +27,6 @@ int main( void )
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Open a window and create its OpenGL context
 	if( !glfwOpenWindow( 800, 800, 0,0,0,0, 32,0, GLFW_WINDOW ) )
 	{
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
@@ -36,7 +34,6 @@ int main( void )
 		return -1;
 	}
 
-	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
@@ -85,6 +82,11 @@ int main( void )
 		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
 			
 			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update(deltaTime));
+			
+			if(ball.Collision(deltaTime, platform) == true) {
+				ball.ChangeMoveY();
+				ball.Update(deltaTime);
+			}
 
 			glEnableVertexAttribArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer() );
@@ -142,9 +144,7 @@ int main( void )
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 
-	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
 	return 0;
 }
-
