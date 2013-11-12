@@ -74,15 +74,15 @@ void Ball::ChangeMoveY()
 		dy = -dy;
 }
 
-bool Ball::Collision(float deltaTime, Figure rect)
+int Ball::Collision(float deltaTime, Figure rect)
 {
 	circleDistance_x = abs(changevector[0] - rect.changevector[0]);
     circleDistance_y = abs(changevector[1] - rect.changevector[1]);
-    if (circleDistance_x > (rect.width/2 + radius)) { return false; }
-    if (circleDistance_y > (rect.height/2 + radius)) { return false; }
+    if (circleDistance_x > (rect.width/2 + radius)) { return 0; }
+    if (circleDistance_y > (rect.height/2 + radius)) { return 0; }
 
-    if (circleDistance_x <= (rect.width/2)) { return true; } 
-    if (circleDistance_y <= (rect.height/2)) { return true; }
+    if (circleDistance_x <= (rect.width/2)) { return 1; } 
+    if (circleDistance_y <= (rect.height/2)) { return 2; }
 
     cornerDistance_sq = pow((circleDistance_x - rect.width/2), 2.0)+ pow((circleDistance_y - rect.height/2), 2.0);
 

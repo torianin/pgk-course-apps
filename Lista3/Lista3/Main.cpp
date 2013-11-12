@@ -77,8 +77,6 @@ int main( void )
 		for (int j = -2; j < 3; j++){
 			Block block((j*(0.3)),(i*(0.2)));
 			block_figures.push_back(block);
-			// Debug
-			//figures.push_back(block);
 		}
 	}
 
@@ -94,14 +92,20 @@ int main( void )
 			
 			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update(deltaTime));
 			
-			if(ball.Collision(deltaTime, platform)) {
+			if(ball.Collision(deltaTime, platform) != 0) {
 				ball.ChangeMoveY();
 				ball.Update(deltaTime);
 			}
 			unsigned int removeID = 0;
 			for (std::vector<Figure>::iterator block = block_figures.begin(); block != block_figures.end();){
-				if(ball.Collision(deltaTime, *block)) {
+				if(ball.Collision(deltaTime, *block) == 1) {
 					ball.ChangeMoveY();
+					ball.Update(deltaTime);
+					block = block_figures.erase(block);
+					std::cout << removeID << std::endl;
+					blocks.UpdateBuffer(removeID);
+				} else if(ball.Collision(deltaTime, *block) == 2){
+					ball.ChangeMoveX();
 					ball.Update(deltaTime);
 					block = block_figures.erase(block);
 					std::cout << removeID << std::endl;

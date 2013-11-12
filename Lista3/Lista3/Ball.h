@@ -9,7 +9,7 @@ class Ball : public Figure
 public:
 	Ball(void);
 	virtual GLfloat* Update(float deltaTime);
-	bool Collision(float deltaTime, Figure rect);
+	int Collision(float deltaTime, Figure rect);
 	void ChangeMoveX();
 	void ChangeMoveY();
 private:
