@@ -4,7 +4,7 @@
 Background::Background(void)
 {
 	drawmode = 1; // GL_TRIANGLE_FAN
-	vertexsize = 12*29*25;
+	vertexsize = 12*29*25+12;
 
 	float radius = 0.05f;
 
@@ -45,11 +45,24 @@ Background::Background(void)
 		}
 	}
 
+	GLfloat border_template[] = {
+		0.1,0.0,
+		0.1,2.05,
+		0.1,2.05,
+		1.9,2.05,
+		1.9,2.05,
+		1.9,0.0
+	};
+	for (int i = 0; i < 12; i++)
+	{
+		vectors.push_back(border_template[i]);
+	}
+
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(GLfloat), vectors.data(), GL_STATIC_DRAW);
 
-	for (unsigned int i=0; i < (vectors.size()*sizeof(GLfloat))/2; i++){
+	for (unsigned int i=0; i < (12*28*25)-50; i++){
 		colors.push_back(0.3f);
 		colors.push_back(0.3f);
 		colors.push_back(0.3f);

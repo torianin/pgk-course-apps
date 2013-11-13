@@ -12,12 +12,13 @@ public:
 	int Collision(float deltaTime, Figure rect);
 	void ChangeMoveX();
 	void ChangeMoveY();
-private:
 	GLfloat	circleDistance_x;
 	GLfloat circleDistance_y;
-	GLfloat radius;
+	GLfloat differenceDistance;
 	GLfloat dx;
 	GLfloat dy;
+private:
+	GLfloat radius;
 	GLfloat cornerDistance_sq;
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;

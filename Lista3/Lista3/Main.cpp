@@ -46,7 +46,7 @@ int main( void )
 
 	glEnable(GL_PROGRAM_POINT_SIZE_EXT);
     glPointSize(40);
-
+	glLineWidth(40.0f);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 	GLuint VertexArrayID;
@@ -92,23 +92,28 @@ int main( void )
 			
 			glProgramUniform4fv(programID, vectorID, 1, (*figure)->Update(deltaTime));
 			
-			if(ball.Collision(deltaTime, platform) != 0) {
+			if(ball.Collision(deltaTime, platform) == 1) {
+				ball.dx+=ball.differenceDistance;
 				ball.ChangeMoveY();
 				ball.Update(deltaTime);
+			} else if(ball.Collision(deltaTime, platform) > 1){
+				ball.dx+=ball.differenceDistance;
+				ball.ChangeMoveY();
+				ball.ChangeMoveX();
+				ball.Update(deltaTime);
 			}
+
 			unsigned int removeID = 0;
 			for (std::vector<Figure>::iterator block = block_figures.begin(); block != block_figures.end();){
 				if(ball.Collision(deltaTime, *block) == 1) {
 					ball.ChangeMoveY();
 					ball.Update(deltaTime);
 					block = block_figures.erase(block);
-					std::cout << removeID << std::endl;
 					blocks.UpdateBuffer(removeID);
 				} else if(ball.Collision(deltaTime, *block) == 2){
 					ball.ChangeMoveX();
 					ball.Update(deltaTime);
 					block = block_figures.erase(block);
-					std::cout << removeID << std::endl;
 					blocks.UpdateBuffer(removeID);
 				} else {
 					++block;
@@ -148,13 +153,13 @@ int main( void )
 
 		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
 			if(platform.dx < 0.75){
-				platform.dx+= 0.5 * deltaTime * 2;
+				platform.dx+= 0.5 * deltaTime * SPEED;
 			}
 		}
 
 		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
 			if(platform.dx > -0.75){
-				platform.dx-= 0.5 * deltaTime * 2;
+				platform.dx-= 0.5 * deltaTime * SPEED;
 			}
 		}
 		
@@ -166,9 +171,10 @@ int main( void )
 
 	glfwTerminate();
 
-	// Cleanup VBO and shader
-	//glDeleteBuffers(1, &vertexbuffer);
-	//glDeleteBuffers(1, &colorbuffer);
+	//for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
+	//	glDeleteBuffers(1, &((*figure)->getVertexBuffer()));
+	//	glDeleteBuffers(1, &((*figure)->getColorBuffer()));
+	//}
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 

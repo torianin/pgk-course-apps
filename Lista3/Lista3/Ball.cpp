@@ -5,7 +5,7 @@ Ball::Ball(void)
 	drawmode = 6; // GL_TRIANGLE_FAN
 	vertexsize = 15;
 
-	dx = 0.5;
+	dx = 0.0;
 	dy = 0.5;
 	changevector[0]=0.0;
 	changevector[1]=-0.5;
@@ -78,6 +78,7 @@ int Ball::Collision(float deltaTime, Figure rect)
 {
 	circleDistance_x = abs(changevector[0] - rect.changevector[0]);
     circleDistance_y = abs(changevector[1] - rect.changevector[1]);
+	differenceDistance = changevector[0] - rect.changevector[0];
     if (circleDistance_x > (rect.width/2 + radius)) { return 0; }
     if (circleDistance_y > (rect.height/2 + radius)) { return 0; }
 

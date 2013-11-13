@@ -7,6 +7,7 @@
 #include "Blocks.h"
 #include "Block.h"
 
-enum {
 
+enum {
+	SPEED = 2
 };
