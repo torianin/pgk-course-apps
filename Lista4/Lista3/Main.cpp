@@ -29,7 +29,7 @@ int main( void )
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if( !glfwOpenWindow( 600, 600, 0,0,0,0, 32,0, GLFW_WINDOW ) )
+	if( !glfwOpenWindow( 800, 600, 0,0,0,0, 32,0, GLFW_WINDOW ) )
 	{
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
 		glfwTerminate();
@@ -77,7 +77,7 @@ int main( void )
 		
 		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
 			
-			for (unsigned int i = 0; i < 2; i++){
+			for (unsigned int i = 0; i < 5; i++){
 				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &((*figure)->getTranslations()[i])[0][0]);
 
 				glEnableVertexAttribArray(0);
@@ -107,6 +107,7 @@ int main( void )
 				glDisableVertexAttribArray(0);
 				glDisableVertexAttribArray(1);
 			}
+			(*figure)->Update(deltaTime);
 		}
 
 		glfwSwapBuffers();
@@ -120,6 +121,7 @@ int main( void )
 		}
 		
 		lastTime = currentTime;
+		while (glfwGetTime() - lastTime < 1.0f / 60.0f);
 
 	}
 	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
