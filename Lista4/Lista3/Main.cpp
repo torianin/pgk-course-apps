@@ -77,14 +77,14 @@ int main( void )
 		
 		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
 			
-			for (unsigned int i = 0; i < 5; i++){
+			for (unsigned int i = 0; i < BODYPARTS; i++){
 				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &((*figure)->getTranslations()[i])[0][0]);
 
 				glEnableVertexAttribArray(0);
 				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer() ); 
 				glVertexAttribPointer(
 					0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-					2,                  // size
+					3,                  // size
 					GL_FLOAT,           // type
 					GL_FALSE,           // normalized?
 					0,                  // stride
