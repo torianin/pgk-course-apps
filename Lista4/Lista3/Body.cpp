@@ -59,7 +59,7 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z)
 	}
 
 	// 0 - t³ów
-	glm::mat4 thorax = glm::mat4(1.0f);
+	glm::mat4 thorax = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
 	translations.push_back(thorax);
 	// 1 - prawa rêka dó³
 	glm::mat4 right_shoulder = glm::translate(0.3f + spawn_x, 0.0f, 0.0f + spawn_z);
@@ -117,14 +117,12 @@ void Body::Update(float deltaTime)
 	move += 0.005;
 	rotate += 0.5;
 
-	//models[2] = glm::rotate(models[2], 5.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	//models[3] = glm::rotate(models[3], 5.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	//models[4] = glm::rotate(models[4], 5.0f, glm::vec3(0.0f, 0.0f, 0.0f));
+	models[1] = models[1] * glm::rotate(rotate, glm::vec3(0.0f, 1.0f, 0.0f));
+
 	for (unsigned int i = 0; i < BODYPARTS; i++)
 	{
 		translations[i] = models[i] * glm::translate(0.0f, 0.0f, move);
 	}
-	translations[1] = translations[1] * glm::rotate(rotate, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	projection = glm::perspective(
 		45.0f, // The horizontal Field of View, in degrees : the amount of "zoom". Think "camera lens". Usually between 90° (extra wide) and 30° (quite zoomed in)
