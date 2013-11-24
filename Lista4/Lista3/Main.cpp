@@ -69,13 +69,13 @@ int main( void )
 	float deltaTime;
 
 	std::vector<Figure*> figures;
-	Body Natalia(0.0f, 0.0f, 0.0f);
+	Body Natalia(0.0f, 0.0f, 0.0f, 0.0f);
 	figures.push_back(&Natalia);
 
-	Body Maciek(-3.0f, 0.0f, -5.0f);
+	Body Maciek(-3.0f, 0.0f, -5.0f, 35.0f);
 	figures.push_back(&Maciek);
 
-	Body Szymon(2.0f, 0.0f, -3.0f);
+	Body Szymon(-2.0f, 0.0f, 3.0f, 240.0f);
 	figures.push_back(&Szymon);
 	do{
 		currentTime  = glfwGetTime();
