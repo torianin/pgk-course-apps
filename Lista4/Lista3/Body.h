@@ -5,13 +5,14 @@
 #include <math.h>
 #include "Config.h"
 
-class BodyPart : public virtual Figure
+class Body : public virtual Figure
 {
 public:
-	BodyPart(void);
+	Body(float spawn_x, float spawn_y, float spawn_z);
 	void Update(float deltaTime) override;
 private:
 	GLfloat move;
+	GLfloat rotate;
 	glm::mat4 projection;
 	glm::mat4 view;
 	std::vector<GLfloat> vectors;

@@ -44,7 +44,7 @@
     <ClCompile Include="Figure.cpp">
       <Filter>Source Files\Logic</Filter>
     </ClCompile>
-    <ClCompile Include="BodyPart.cpp">
+    <ClCompile Include="Body.cpp">
       <Filter>Source Files\Draw</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,7 +58,7 @@
     <ClInclude Include="Config.h">
       <Filter>Header Files\Logic</Filter>
     </ClInclude>
-    <ClInclude Include="BodyPart.h">
+    <ClInclude Include="Body.h">
       <Filter>Header Files\Draw</Filter>
     </ClInclude>
   </ItemGroup>

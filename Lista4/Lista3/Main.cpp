@@ -42,14 +42,19 @@ int main( void )
 		return -1;
 	}
 
-	glfwSetWindowTitle( "Tutorial 02" );
+	glfwSetWindowTitle( "Symulacja t³umu" );
 
 	glfwEnable( GLFW_STICKY_KEYS );
 
 	glEnable(GL_PROGRAM_POINT_SIZE_EXT);
     glPointSize(40);
-	glLineWidth(40.0f);
+	glLineWidth(1.0f);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -64,14 +69,19 @@ int main( void )
 	float deltaTime;
 
 	std::vector<Figure*> figures;
-	BodyPart thorax;
-	figures.push_back(&thorax);
+	Body Natalia(0.0f, 0.0f, 0.0f);
+	figures.push_back(&Natalia);
 
+	Body Maciek(-3.0f, 0.0f, -5.0f);
+	figures.push_back(&Maciek);
+
+	Body Szymon(2.0f, 0.0f, -3.0f);
+	figures.push_back(&Szymon);
 	do{
 		currentTime  = glfwGetTime();
 		deltaTime = float(currentTime - lastTime);
 
-		glClear( GL_COLOR_BUFFER_BIT );
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(programID);
 		
