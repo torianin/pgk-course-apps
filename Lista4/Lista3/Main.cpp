@@ -67,7 +67,10 @@ int main( void )
 	double lastTime = 0;
 	double currentTime;
 	float deltaTime;
-	glm::vec3 camera;
+	glm::vec3 camera = glm::vec3(2, 3, 5);
+
+	/* initialize random seed: */
+	srand(time(NULL));
 
 	std::vector<Figure*> figures;
 	Body Natalia(0.0f, 0.0f, 0.0f, 0.0f);
@@ -127,16 +130,12 @@ int main( void )
 
 		glfwSwapBuffers();
 
-		if (glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS){
-
+		if (glfwGetKey('V') == GLFW_PRESS){
+			if (glfwGetKey('V') == GLFW_RELEASE){
+				
+			}
 		}
-
-		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
-
-		}
-		//camera = glm::vec3(2, 3, 5);
-		camera = glm::vec3(Szymon.GetCameraOverHead()[0], Szymon.GetCameraOverHead()[1], Szymon.GetCameraOverHead()[2]);
-
+		//camera = glm::vec3(Szymon.GetCameraOverHead()[0], Szymon.GetCameraOverHead()[1], Szymon.GetCameraOverHead()[2]);
 		lastTime = currentTime;
 		while (glfwGetTime() - lastTime < 1.0f / 60.0f);
 

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include <math.h>
 // Include GLEW
 #include <GL/glew.h>
 

@@ -2,6 +2,7 @@
 
 #include "Figure.h"
 #include "Platform.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "Config.h"
 
@@ -19,6 +20,6 @@ private:
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;
 	vector<mat4> models;
-	GLfloat head_coordinates[60];
+	GLfloat head_coordinates[3];
 };
 

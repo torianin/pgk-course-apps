@@ -59,22 +59,22 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	}
 
 	// 0 - prawa rêka góra
-	glm::mat4 right_shoulder = glm::translate(0.1f + spawn_x, 0.0f, 0.0f + spawn_z);
+	glm::mat4 right_shoulder = glm::translate(spawn_x, 0.0f, spawn_z);
 	translations.push_back(right_shoulder);
 	// 1 - lewa rêka góra
-	glm::mat4 left_shoulder = glm::translate(-0.1f + spawn_x, 0.0f, 0.0f + spawn_z);
+	glm::mat4 left_shoulder = glm::translate(spawn_x, 0.0f, spawn_z);
 	translations.push_back(left_shoulder);
 	// 2 - prawa rêka dó³
-	glm::mat4 right_arm = glm::translate(0.4f + spawn_x, -0.2f, 0.0f + spawn_z);
+	glm::mat4 right_arm = glm::translate( spawn_x, 0.0f, spawn_z);
 	translations.push_back(right_arm);
 	// 3 - lewa rêka dó³
-	glm::mat4 left_arm = glm::translate(-0.4f + spawn_x, -0.2f, 0.0f + spawn_z);
+	glm::mat4 left_arm = glm::translate(spawn_x, 0.0f, spawn_z);
 	translations.push_back(left_arm);
-	// 4
+	// 4 - prawa noga góra
 	glm::mat4 right_leg = glm::translate(0.13f + spawn_x, -0.35f, 0.0f + spawn_z);
 	translations.push_back(right_leg);
-
-	glm::mat4 down_right_leg = glm::translate(0.13f + spawn_x, -0.60f, 0.0f + spawn_z);
+	// 5 - prawa noga dó³
+	glm::mat4 down_right_leg = glm::translate(spawn_x, 0.0f, spawn_z);
 	translations.push_back(down_right_leg);
 
 	glm::mat4 left_leg = glm::translate(-0.13f + spawn_x, -0.35f, 0.0f + spawn_z);
@@ -104,11 +104,16 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(GLfloat), vectors.data(), GL_STATIC_DRAW);
+	
 
+	float r1 = (rand() % 9 + 1) /10.0;
+	float r2 = (rand() % 9 + 1) /10.0;
+	float r3 = (rand() % 9 + 1) /10.0;
+	cout << r1 << r2 << r3;
 	for (unsigned int i = 0; i < (vectors.size()*sizeof(GLfloat))*2; i++){
-		colors.push_back(1.0f);
-		colors.push_back(0.0f);
-		colors.push_back(0.0f);
+		colors.push_back(r1);
+		colors.push_back(r2);
+		colors.push_back(r3);
 	}
 
 	glGenBuffers(1, &colorbuffer);
@@ -120,33 +125,44 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 {
 	move += 0.005;
 	rotate_counter += 0.05;
-	head_coordinates[2] += move;
+	head_coordinates[2] = move;
 
 	// update prawa rêka góra
 	translations[0] = models[0] * glm::translate(0.0f, 0.25f, move);
-	translations[0] = translations[0] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	translations[0] = translations[0] * glm::rotate(30.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 	translations[0] = translations[0] * glm::rotate(sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[0] = translations[0] * glm::translate(0.0f, -0.25f, 0.0f);
 
 	// update lewa rêka góra
 	translations[1] = models[1] * glm::translate(0.0f, 0.25f, move);
-	translations[1] = translations[1] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, -1.0f));
+	translations[1] = translations[1] * glm::rotate(30.0f, glm::vec3(0.0f, 0.0f, -1.0f));
 	translations[1] = translations[1] * glm::rotate(-sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[1] = translations[1] * glm::translate(0.0f, -0.25f, 0.0f);
-
+	
 	// update prawa rêka dó³
-	translations[2] = models[2] * glm::translate(0.3f, 0.05f, move);
-	translations[2] = translations[2] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	translations[2] = translations[2] * glm::rotate(sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
-	translations[2] = translations[2] * glm::translate(-0.3f, -0.05f, 0.0f);
+	
+	translations[2] = translations[0] * glm::translate(0.0f, -0.15f, 0.0f);
+	translations[2] = translations[2] * glm::rotate(-15.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	translations[2] = translations[2] * glm::rotate((sin(rotate_counter) * 30) - 40, glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[2] = translations[2] * glm::translate(0.0f, -0.15f, 0.0f);
 
-	// lewa rêka dó³
-	translations[3] = models[3] * glm::translate(-0.3f, 0.05f, move);
-	translations[3] = translations[3] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, -1.0f));
-	translations[3] = translations[3] * glm::rotate(-sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
-	translations[3] = translations[3] * glm::translate(0.3f, -0.05f, 0.0f);
+	// update lewa rêka dó³
+	translations[3] = translations[1] * glm::translate(0.0f, -0.15f, 0.0f);
+	translations[3] = translations[3] * glm::rotate(30.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	translations[3] = translations[3] * glm::rotate((-sin(rotate_counter) * 30) - 40, glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[3] = translations[3] * glm::translate(0.0f, -0.15f, 0.0f);
 
-	for (unsigned int i = 4; i < BODYPARTS; i++)
+	//update prawa noga góra
+	translations[4] = models[4] * glm::translate(0.0f, 0.35f, move);
+	translations[4] = translations[4] * glm::rotate(-sin(rotate_counter) * 20, glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[4] = translations[4] * glm::translate(0.0f, -0.35f, 0.0f);
+	
+	//update prawa noga dó³
+	translations[5] = translations[4] * glm::translate(0.0f, -0.15f, 0.0f);
+	translations[5] = translations[5] * glm::rotate((-sin(rotate_counter) * 15), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[5] = translations[5] * glm::translate(0.0f, -0.30f, 0.0f);
+
+	for (unsigned int i = 6; i < BODYPARTS; i++)
 	{
 		translations[i] = models[i] * glm::translate(0.0f, 0.0f, move);
 	}
