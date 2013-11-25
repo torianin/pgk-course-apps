@@ -76,13 +76,12 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	// 5 - prawa noga dó³
 	glm::mat4 down_right_leg = glm::translate(spawn_x, 0.0f, spawn_z);
 	translations.push_back(down_right_leg);
-
+	// 6 - lewa noga góra
 	glm::mat4 left_leg = glm::translate(-0.13f + spawn_x, -0.35f, 0.0f + spawn_z);
 	translations.push_back(left_leg);
-
-	glm::mat4 down_left_leg = glm::translate(-0.13f + spawn_x, -0.60f, 0.0f + spawn_z);
+	// 7 - lewa noga dó³
+	glm::mat4 down_left_leg = glm::translate(spawn_x, 0.0f, spawn_z);
 	translations.push_back(down_left_leg);
-	
 	// 8 - t³ów
 	glm::mat4 thorax = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
 	translations.push_back(thorax);
@@ -93,6 +92,22 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	head_coordinates[2] = 0.0f + spawn_z;
 	glm::mat4 head = glm::translate(head_coordinates[0], head_coordinates[1], head_coordinates[2]);
 	translations.push_back(head);
+
+	// 10 - lewa rêka
+	glm::mat4 left_hand = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
+	translations.push_back(left_hand);
+
+	// 11 - prawa rêka
+	glm::mat4 right_hand = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
+	translations.push_back(right_hand);
+
+	// 12 - lewa stopa
+	glm::mat4 left_foot = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
+	translations.push_back(left_foot);
+
+	// 13 - prawa stopa
+	glm::mat4 right_foot = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
+	translations.push_back(right_foot);
 
 	models = translations;
 
@@ -109,7 +124,6 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	float r1 = (rand() % 9 + 1) /10.0;
 	float r2 = (rand() % 9 + 1) /10.0;
 	float r3 = (rand() % 9 + 1) /10.0;
-	cout << r1 << r2 << r3;
 	for (unsigned int i = 0; i < (vectors.size()*sizeof(GLfloat))*2; i++){
 		colors.push_back(r1);
 		colors.push_back(r2);
@@ -123,7 +137,7 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 
 void Body::Update(float deltaTime, glm::vec3 camera)
 {
-	move += 0.005;
+	move += (rand() % 2 + 1) / 100.0;
 	rotate_counter += 0.05;
 	head_coordinates[2] = move;
 
@@ -140,7 +154,6 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 	translations[1] = translations[1] * glm::translate(0.0f, -0.25f, 0.0f);
 	
 	// update prawa rêka dó³
-	
 	translations[2] = translations[0] * glm::translate(0.0f, -0.15f, 0.0f);
 	translations[2] = translations[2] * glm::rotate(-15.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 	translations[2] = translations[2] * glm::rotate((sin(rotate_counter) * 30) - 40, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -152,27 +165,57 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 	translations[3] = translations[3] * glm::rotate((-sin(rotate_counter) * 30) - 40, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[3] = translations[3] * glm::translate(0.0f, -0.15f, 0.0f);
 
+	//update prawa d³oñ
+	translations[10] = translations[2] * glm::translate(0.0f, -0.15f, 0.0f);
+
+	//update prawa d³oñ
+	translations[11] = translations[3] * glm::translate(0.0f, -0.15f, 0.0f);
+
 	//update prawa noga góra
 	translations[4] = models[4] * glm::translate(0.0f, 0.35f, move);
 	translations[4] = translations[4] * glm::rotate(-sin(rotate_counter) * 20, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[4] = translations[4] * glm::translate(0.0f, -0.35f, 0.0f);
-	
+
 	//update prawa noga dó³
 	translations[5] = translations[4] * glm::translate(0.0f, -0.15f, 0.0f);
 	translations[5] = translations[5] * glm::rotate((-sin(rotate_counter) * 15), glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[5] = translations[5] * glm::translate(0.0f, -0.30f, 0.0f);
 
-	for (unsigned int i = 6; i < BODYPARTS; i++)
+	//update lewa noga góra
+	translations[6] = models[6] * glm::translate(0.0f, 0.35f, move);
+	translations[6] = translations[6] * glm::rotate(sin(rotate_counter) * 20, glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[6] = translations[6] * glm::translate(0.0f, -0.35f, 0.0f);
+
+	//update lewa noga dó³
+	translations[7] = translations[6] * glm::translate(0.0f, -0.15f, 0.0f);
+	translations[7] = translations[7] * glm::rotate((sin(rotate_counter) * 15), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[7] = translations[7] * glm::translate(0.0f, -0.30f, 0.0f);
+	
+	//update prawa stopa
+	translations[12] = translations[5] * glm::translate(0.0f, -0.15f, 0.0f);
+	translations[12] = translations[12] * glm::rotate((sin(rotate_counter) * 40), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[12] = translations[12] * glm::translate(0.0f, 0.0f, 0.1f);
+
+	//update prawa stopa
+	translations[13] = translations[7] * glm::translate(0.0f, -0.15f, 0.0f);
+	translations[13] = translations[13] * glm::rotate(-(sin(rotate_counter) * 40), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[13] = translations[13] * glm::translate(0.0f, 0.0f, 0.1f);
+
+	for (unsigned int i = 8; i < BODYPARTS-4; i++)
 	{
 		translations[i] = models[i] * glm::translate(0.0f, 0.0f, move);
 	}
 
-	for (unsigned int i = 0; i < BODYPARTS-1; i++)
+	for (unsigned int i = 0; i < BODYPARTS; i++)
 	{
-		translations[i] = translations[i] * glm::scale(0.5f, 2.0f, 0.5f);
+		if (i < 9){
+			translations[i] = translations[i] * glm::scale(0.5f, 2.0f, 0.5f);
+		} else if(i != 9 && i < 12)  {
+			translations[i] = translations[i] * glm::scale(0.5f, 0.75f, 0.75f);
+		} else if (i != 9 && i < 14) {
+			translations[i] = translations[i] * glm::scale(0.5f, 0.50f, 1.25f);
+		}
 	}
-	//HEAD
-	translations[9] = translations[9] * glm::scale(0.5f, 0.5f, 0.5f);
 
 	projection = glm::perspective(
 		60.0f, // The horizontal Field of View, in degrees : the amount of "zoom". Think "camera lens". Usually between 90° (extra wide) and 30° (quite zoomed in)

@@ -6,6 +6,6 @@
 #include <time.h>       /* time */
 
 enum {
-	BODYPARTS = 10,
+	BODYPARTS = 14,
 	SPEED = 2
 };
