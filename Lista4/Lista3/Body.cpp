@@ -65,10 +65,10 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	glm::mat4 left_shoulder = glm::translate(-0.1f + spawn_x, 0.0f, 0.0f + spawn_z);
 	translations.push_back(left_shoulder);
 	// 2 - prawa rêka dó³
-	glm::mat4 right_arm = glm::translate(0.6f + spawn_x, -0.3f, 0.0f + spawn_z);
+	glm::mat4 right_arm = glm::translate(0.4f + spawn_x, -0.2f, 0.0f + spawn_z);
 	translations.push_back(right_arm);
 	// 3 - lewa rêka dó³
-	glm::mat4 left_arm = glm::translate(-0.6f + spawn_x, -0.3f, 0.0f + spawn_z);
+	glm::mat4 left_arm = glm::translate(-0.4f + spawn_x, -0.2f, 0.0f + spawn_z);
 	translations.push_back(left_arm);
 	// 4
 	glm::mat4 right_leg = glm::translate(0.13f + spawn_x, -0.35f, 0.0f + spawn_z);
@@ -86,8 +86,12 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	// 8 - t³ów
 	glm::mat4 thorax = glm::translate(0.0f + spawn_x, 0.0f, 0.0f + spawn_z);
 	translations.push_back(thorax);
+
 	// 9 - g³owa
-	glm::mat4 head = glm::translate(0.0f + spawn_x, 0.40f + spawn_y, 0.0f + spawn_z);
+	head_coordinates[0] = 0.0f + spawn_x;
+	head_coordinates[1] = 0.40f + spawn_y;
+	head_coordinates[2] = 0.0f + spawn_z;
+	glm::mat4 head = glm::translate(head_coordinates[0], head_coordinates[1], head_coordinates[2]);
 	translations.push_back(head);
 
 	models = translations;
@@ -112,10 +116,11 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
 
-void Body::Update(float deltaTime)
+void Body::Update(float deltaTime, glm::vec3 camera)
 {
 	move += 0.005;
 	rotate_counter += 0.05;
+	head_coordinates[2] += move;
 
 	// update prawa rêka góra
 	translations[0] = models[0] * glm::translate(0.0f, 0.25f, move);
@@ -123,13 +128,25 @@ void Body::Update(float deltaTime)
 	translations[0] = translations[0] * glm::rotate(sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[0] = translations[0] * glm::translate(0.0f, -0.25f, 0.0f);
 
-	// lewa prawa rêka góra
+	// update lewa rêka góra
 	translations[1] = models[1] * glm::translate(0.0f, 0.25f, move);
 	translations[1] = translations[1] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, -1.0f));
 	translations[1] = translations[1] * glm::rotate(-sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[1] = translations[1] * glm::translate(0.0f, -0.25f, 0.0f);
 
-	for (unsigned int i = 2; i < BODYPARTS; i++)
+	// update prawa rêka dó³
+	translations[2] = models[2] * glm::translate(0.3f, 0.05f, move);
+	translations[2] = translations[2] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	translations[2] = translations[2] * glm::rotate(sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[2] = translations[2] * glm::translate(-0.3f, -0.05f, 0.0f);
+
+	// lewa rêka dó³
+	translations[3] = models[3] * glm::translate(-0.3f, 0.05f, move);
+	translations[3] = translations[3] * glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, -1.0f));
+	translations[3] = translations[3] * glm::rotate(-sin(rotate_counter) * 45, glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[3] = translations[3] * glm::translate(0.3f, -0.05f, 0.0f);
+
+	for (unsigned int i = 4; i < BODYPARTS; i++)
 	{
 		translations[i] = models[i] * glm::translate(0.0f, 0.0f, move);
 	}
@@ -142,7 +159,7 @@ void Body::Update(float deltaTime)
 	translations[9] = translations[9] * glm::scale(0.5f, 0.5f, 0.5f);
 
 	projection = glm::perspective(
-		45.0f, // The horizontal Field of View, in degrees : the amount of "zoom". Think "camera lens". Usually between 90° (extra wide) and 30° (quite zoomed in)
+		60.0f, // The horizontal Field of View, in degrees : the amount of "zoom". Think "camera lens". Usually between 90° (extra wide) and 30° (quite zoomed in)
 		4.0f / 3.0f, // Aspect Ratio. Depends on the size of your window. Notice that 4/3 == 800/600 == 1280/960, sounds familiar ?
 		0.1f,  // Near clipping plane. Keep as big as possible, or you'll get precision issues.
 		100.0f // Far clipping plane. Keep as little as possible.
@@ -150,7 +167,8 @@ void Body::Update(float deltaTime)
 
 	// Camera matrix
 	view = glm::lookAt(
-		glm::vec3(2, 3, 5), // Camera is at (4,3,3), in World Space
+		//glm::vec3(2, 3, 5), // Camera is at (4,3,3), in World Space
+		camera, // Head co
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);
@@ -163,4 +181,8 @@ void Body::Update(float deltaTime)
 	{
 		translations[i] = projection * view * translations[i]; // Remember, matrix multiplication is the other way around
 	}	
+}
+
+GLfloat* Body::GetCameraOverHead(){
+	return head_coordinates;
 }

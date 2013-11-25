@@ -31,6 +31,6 @@ public:
 	GLuint getDrawMode(void);
 	GLuint getVertexSize(void);
 	vector<mat4>& Figure::getTranslations(void);
-	virtual void Update(float deltaTime);
+	virtual void Update(float deltaTime, glm::vec3 camera);
 };
 

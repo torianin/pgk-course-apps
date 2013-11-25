@@ -9,7 +9,8 @@ class Body : public virtual Figure
 {
 public:
 	Body(float spawn_x, float spawn_y, float spawn_z, float rotate);
-	void Update(float deltaTime) override;
+	void Update(float deltaTime, glm::vec3 camera) override;
+	GLfloat* GetCameraOverHead();
 private:
 	GLfloat move;
 	GLfloat rotate_counter;
@@ -18,5 +19,6 @@ private:
 	std::vector<GLfloat> vectors;
 	std::vector<GLfloat> colors;
 	vector<mat4> models;
+	GLfloat head_coordinates[60];
 };
 

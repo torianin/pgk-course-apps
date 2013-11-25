@@ -67,15 +67,19 @@ int main( void )
 	double lastTime = 0;
 	double currentTime;
 	float deltaTime;
+	glm::vec3 camera;
 
 	std::vector<Figure*> figures;
 	Body Natalia(0.0f, 0.0f, 0.0f, 0.0f);
 	figures.push_back(&Natalia);
 
+	Body Robcio(0.0f, 0.0f, 2.0f, 0.0f);
+	figures.push_back(&Robcio);
+
 	Body Maciek(-3.0f, 0.0f, -5.0f, 35.0f);
 	figures.push_back(&Maciek);
 
-	Body Szymon(-2.0f, 0.0f, 3.0f, 240.0f);
+	Body Szymon(-4.0f, 0.0f, -3.0f, 240.0f);
 	figures.push_back(&Szymon);
 	do{
 		currentTime  = glfwGetTime();
@@ -117,7 +121,8 @@ int main( void )
 				glDisableVertexAttribArray(0);
 				glDisableVertexAttribArray(1);
 			}
-			(*figure)->Update(deltaTime);
+
+			(*figure)->Update(deltaTime, camera);
 		}
 
 		glfwSwapBuffers();
@@ -129,7 +134,9 @@ int main( void )
 		else if (glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS){
 
 		}
-		
+		//camera = glm::vec3(2, 3, 5);
+		camera = glm::vec3(Szymon.GetCameraOverHead()[0], Szymon.GetCameraOverHead()[1], Szymon.GetCameraOverHead()[2]);
+
 		lastTime = currentTime;
 		while (glfwGetTime() - lastTime < 1.0f / 60.0f);
 
