@@ -67,22 +67,23 @@ int main( void )
 	double lastTime = 0;
 	double currentTime;
 	float deltaTime;
+	int view_mode = FULL_VIEW;
 	glm::vec3 camera = glm::vec3(2, 3, 5);
-
+	glm::vec3 lookat = glm::vec3(0, 0, 0);
 	/* initialize random seed: */
 	srand(time(NULL));
 
 	std::vector<Figure*> figures;
-	Body Natalia(0.0f, 0.0f, 0.0f, 0.0f);
+	Body Natalia(0.0f, 0.0f, 0.0f, 0.0f, 0.3f);
 	figures.push_back(&Natalia);
 
-	Body Robcio(0.0f, 0.0f, 2.0f, 0.0f);
+	Body Robcio(0.0f, 0.0f, 2.0f, 0.0f, 0.5f);
 	figures.push_back(&Robcio);
 
-	Body Maciek(-3.0f, 0.0f, -5.0f, 35.0f);
+	Body Maciek(-3.0f, 0.0f, -5.0f, 35.0f, 0.5f);
 	figures.push_back(&Maciek);
 
-	Body Szymon(-4.0f, 0.0f, -3.0f, 240.0f);
+	Body Szymon(-4.0f, 0.0f, -3.0f, 240.0f, 1.75f);
 	figures.push_back(&Szymon);
 	do{
 		currentTime  = glfwGetTime();
@@ -125,17 +126,40 @@ int main( void )
 				glDisableVertexAttribArray(1);
 			}
 
-			(*figure)->Update(deltaTime, camera);
+			(*figure)->Update(deltaTime, camera, lookat);
 		}
 
 		glfwSwapBuffers();
 
 		if (glfwGetKey('V') == GLFW_PRESS){
 			if (glfwGetKey('V') == GLFW_RELEASE){
-				
+				if (view_mode == FULL_VIEW){
+					view_mode = HEAD_VIEW;
+				} else if(view_mode == HEAD_VIEW){
+					view_mode = OVER_CHAR_VIEW;
+				} else if(view_mode == OVER_CHAR_VIEW){
+					view_mode = FULL_VIEW;
+				}
 			}
 		}
-		//camera = glm::vec3(Szymon.GetCameraOverHead()[0], Szymon.GetCameraOverHead()[1], Szymon.GetCameraOverHead()[2]);
+		switch (view_mode)
+		{
+			case FULL_VIEW:
+				camera = glm::vec3(2, 3, 5);
+				lookat = glm::vec3(0, 0, 0);
+				break;
+			case HEAD_VIEW:
+				camera = glm::vec3(Natalia.GetCameraOverHead()[0], Natalia.GetCameraOverHead()[1], Natalia.GetCameraOverHead()[2]);
+				lookat = glm::vec3(Natalia.GetCameraLookAt()[0], Natalia.GetCameraLookAt()[1], Natalia.GetCameraLookAt()[2]);
+				break;
+			case OVER_CHAR_VIEW:
+				camera = glm::vec3(Natalia.GetCameraMoreOverHead()[0], Natalia.GetCameraMoreOverHead()[1] + 2.0, Natalia.GetCameraMoreOverHead()[2] + 2.0);
+				lookat = glm::vec3(Natalia.GetCameraLookAt()[0], Natalia.GetCameraLookAt()[1], Natalia.GetCameraLookAt()[2]);
+				break;
+			default:
+				camera = glm::vec3(2, 3, 5);
+				break;
+		}
 		lastTime = currentTime;
 		while (glfwGetTime() - lastTime < 1.0f / 60.0f);
 
@@ -145,10 +169,6 @@ int main( void )
 
 	glfwTerminate();
 
-	//for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
-	//	glDeleteBuffers(1, &((*figure)->getVertexBuffer()));
-	//	glDeleteBuffers(1, &((*figure)->getColorBuffer()));
-	//}
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 

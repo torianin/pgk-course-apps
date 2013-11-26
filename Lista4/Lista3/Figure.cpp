@@ -29,7 +29,7 @@ vector<mat4>& Figure::getTranslations(void)
 	return translations;
 }
 
-void Figure::Update(float deltaTime, glm::vec3 camera)
+void Figure::Update(float deltaTime, glm::vec3 camera, glm::vec3 lookat)
 {
 
 }

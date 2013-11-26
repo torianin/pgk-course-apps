@@ -1,6 +1,6 @@
 #include "Body.h"
 
-Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
+Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate, float stomach)
 {
 	drawmode = 4; // GL_TRIANGLE_FAN
 	vertexsize = 12 * 3;
@@ -10,6 +10,7 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 
 	move = 0.001;
 	rotate_counter = 0.001;
+	stomach_value = stomach;
 
 	#ifndef buffer_data
 	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
@@ -87,10 +88,7 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	translations.push_back(thorax);
 
 	// 9 - g³owa
-	head_coordinates[0] = 0.0f + spawn_x;
-	head_coordinates[1] = 0.40f + spawn_y;
-	head_coordinates[2] = 0.0f + spawn_z;
-	glm::mat4 head = glm::translate(head_coordinates[0], head_coordinates[1], head_coordinates[2]);
+	glm::mat4 head = glm::translate(0.0f + spawn_x, 0.40f + spawn_y, 0.0f + spawn_z);
 	translations.push_back(head);
 
 	// 10 - lewa rêka
@@ -135,11 +133,10 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate)
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
 
-void Body::Update(float deltaTime, glm::vec3 camera)
+void Body::Update(float deltaTime, glm::vec3 camera, glm::vec3 lookat)
 {
-	move += (rand() % 2 + 1) / 100.0;
+	move += (rand() % 2 + 1) / 100.0 - (stomach_value / 250);
 	rotate_counter += 0.05;
-	head_coordinates[2] = move;
 
 	// update prawa rêka góra
 	translations[0] = models[0] * glm::translate(0.0f, 0.25f, move);
@@ -178,7 +175,7 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 
 	//update prawa noga dó³
 	translations[5] = translations[4] * glm::translate(0.0f, -0.15f, 0.0f);
-	translations[5] = translations[5] * glm::rotate((-sin(rotate_counter) * 15), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[5] = translations[5] * glm::rotate((-sin(rotate_counter) * 15) + 20, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[5] = translations[5] * glm::translate(0.0f, -0.30f, 0.0f);
 
 	//update lewa noga góra
@@ -188,17 +185,17 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 
 	//update lewa noga dó³
 	translations[7] = translations[6] * glm::translate(0.0f, -0.15f, 0.0f);
-	translations[7] = translations[7] * glm::rotate((sin(rotate_counter) * 15), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[7] = translations[7] * glm::rotate((sin(rotate_counter) * 15) +20, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[7] = translations[7] * glm::translate(0.0f, -0.30f, 0.0f);
 	
 	//update prawa stopa
 	translations[12] = translations[5] * glm::translate(0.0f, -0.15f, 0.0f);
-	translations[12] = translations[12] * glm::rotate((sin(rotate_counter) * 40), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[12] = translations[12] * glm::rotate((sin(rotate_counter) * 30) - 10, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[12] = translations[12] * glm::translate(0.0f, 0.0f, 0.1f);
 
 	//update prawa stopa
 	translations[13] = translations[7] * glm::translate(0.0f, -0.15f, 0.0f);
-	translations[13] = translations[13] * glm::rotate(-(sin(rotate_counter) * 40), glm::vec3(1.0f, 0.0f, 0.0f));
+	translations[13] = translations[13] * glm::rotate(-(sin(rotate_counter) * 30)- 10, glm::vec3(1.0f, 0.0f, 0.0f));
 	translations[13] = translations[13] * glm::translate(0.0f, 0.0f, 0.1f);
 
 	for (unsigned int i = 8; i < BODYPARTS-4; i++)
@@ -208,7 +205,9 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 
 	for (unsigned int i = 0; i < BODYPARTS; i++)
 	{
-		if (i < 9){
+		if (i == 8){
+			translations[i] = translations[i] * glm::scale(stomach_value, 2.0f, stomach_value);
+		} else if (i < 9){
 			translations[i] = translations[i] * glm::scale(0.5f, 2.0f, 0.5f);
 		} else if(i != 9 && i < 12)  {
 			translations[i] = translations[i] * glm::scale(0.5f, 0.75f, 0.75f);
@@ -216,6 +215,12 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 			translations[i] = translations[i] * glm::scale(0.5f, 0.50f, 1.25f);
 		}
 	}
+	moreCamera = glm::vec4(0.0f, 1.5f, -7.0f, 1.0f);
+	moreTransformedCamera = translations[9] * moreCamera;
+	zeroCamera = glm::vec4(0.0f, 0.0f, 0.5f, 1.0f);
+	transformedCamera = translations[9] * zeroCamera;
+	zeroLookAt = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	transformedLookAt = translations[9] * zeroLookAt;
 
 	projection = glm::perspective(
 		60.0f, // The horizontal Field of View, in degrees : the amount of "zoom". Think "camera lens". Usually between 90° (extra wide) and 30° (quite zoomed in)
@@ -228,7 +233,7 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 	view = glm::lookAt(
 		//glm::vec3(2, 3, 5), // Camera is at (4,3,3), in World Space
 		camera, // Head co
-		glm::vec3(0, 0, 0), // and looks at the origin
+		lookat, // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 	);
 
@@ -242,6 +247,16 @@ void Body::Update(float deltaTime, glm::vec3 camera)
 	}	
 }
 
-GLfloat* Body::GetCameraOverHead(){
-	return head_coordinates;
+glm::vec4 Body::GetCameraOverHead(){
+
+	return transformedCamera;
+}
+
+glm::vec4 Body::GetCameraLookAt(){
+
+	return transformedLookAt;
+}
+
+glm::vec4 Body::GetCameraMoreOverHead(){
+	return moreTransformedCamera;
 }

@@ -7,5 +7,8 @@
 
 enum {
 	BODYPARTS = 14,
-	SPEED = 2
+	SPEED = 2,
+	FULL_VIEW = 0,
+	HEAD_VIEW = 1,
+	OVER_CHAR_VIEW = 2
 };
