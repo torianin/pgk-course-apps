@@ -74,32 +74,50 @@ int main( void )
 	srand(time(NULL));
 
 	std::vector<Figure*> figures;
+
+	int x;
+	int z;
+	for (int i = 0; i < 70; i++)
+	{
+		x = (rand() % 5 + 1);
+		z = (rand() % 5 + 1);
+		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
+			//if (x != (*figure)->x && z != (*figure)->z){
+				Body *bodies = new Body(x, 0.0f, z, (rand() % 270 + 1), (rand() % 30 + 10) / 10);
+			//	figures.push_back(bodies);
+			//	break;
+			//}
+		}
+	}
+
 	Body Natalia(0.0f, 0.0f, 0.0f, 0.0f, 0.3f);
 	figures.push_back(&Natalia);
 
-	Body Robcio(0.0f, 0.0f, 2.0f, 0.0f, 0.5f);
-	figures.push_back(&Robcio);
+	int spawn_time = 0;
+	//Body Robcio(0.0f, 0.0f, 2.0f, 0.0f, 0.5f);
+	//figures.push_back(&Robcio);
 
-	Body Maciek(-3.0f, 0.0f, -5.0f, 35.0f, 0.5f);
-	figures.push_back(&Maciek);
+	//Body Maciek(-3.0f, 0.0f, -5.0f, 35.0f, 0.5f);
+	//figures.push_back(&Maciek);
 
-	Body Szymon(-4.0f, 0.0f, -3.0f, 240.0f, 1.75f);
-	figures.push_back(&Szymon);
+	//Body Szymon(-4.0f, 0.0f, -3.0f, 240.0f, 1.75f);
+	//figures.push_back(&Szymon);
 	do{
-		currentTime  = glfwGetTime();
+		spawn_time++;
+		currentTime = glfwGetTime();
 		deltaTime = float(currentTime - lastTime);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(programID);
-		
+
 		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
-			
+
 			for (unsigned int i = 0; i < BODYPARTS; i++){
 				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &((*figure)->getTranslations()[i])[0][0]);
 
 				glEnableVertexAttribArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer() ); 
+				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer());
 				glVertexAttribPointer(
 					0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 					3,                  // size
@@ -107,10 +125,10 @@ int main( void )
 					GL_FALSE,           // normalized?
 					0,                  // stride
 					(void*)0            // array buffer offset
-				);
+					);
 
 				glEnableVertexAttribArray(1);
-				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getColorBuffer() );
+				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getColorBuffer());
 				glVertexAttribPointer(
 					1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 					3,                                // size
@@ -118,9 +136,9 @@ int main( void )
 					GL_FALSE,                         // normalized?
 					0,                                // stride
 					(void*)0                          // array buffer offset
-				);
+					);
 
-				glDrawArrays((*figure)->getDrawMode(), 0, (*figure)->getVertexSize() );
+				glDrawArrays((*figure)->getDrawMode(), 0, (*figure)->getVertexSize());
 
 				glDisableVertexAttribArray(0);
 				glDisableVertexAttribArray(1);
@@ -135,32 +153,50 @@ int main( void )
 			if (glfwGetKey('V') == GLFW_RELEASE){
 				if (view_mode == FULL_VIEW){
 					view_mode = HEAD_VIEW;
-				} else if(view_mode == HEAD_VIEW){
+				}
+				else if (view_mode == HEAD_VIEW){
 					view_mode = OVER_CHAR_VIEW;
-				} else if(view_mode == OVER_CHAR_VIEW){
+				}
+				else if (view_mode == OVER_CHAR_VIEW){
 					view_mode = FULL_VIEW;
 				}
 			}
 		}
 		switch (view_mode)
 		{
-			case FULL_VIEW:
-				camera = glm::vec3(2, 3, 5);
-				lookat = glm::vec3(0, 0, 0);
-				break;
-			case HEAD_VIEW:
-				camera = glm::vec3(Natalia.GetCameraOverHead()[0], Natalia.GetCameraOverHead()[1], Natalia.GetCameraOverHead()[2]);
-				lookat = glm::vec3(Natalia.GetCameraLookAt()[0], Natalia.GetCameraLookAt()[1], Natalia.GetCameraLookAt()[2]);
-				break;
-			case OVER_CHAR_VIEW:
-				camera = glm::vec3(Natalia.GetCameraMoreOverHead()[0], Natalia.GetCameraMoreOverHead()[1] + 2.0, Natalia.GetCameraMoreOverHead()[2] + 2.0);
-				lookat = glm::vec3(Natalia.GetCameraLookAt()[0], Natalia.GetCameraLookAt()[1], Natalia.GetCameraLookAt()[2]);
-				break;
-			default:
-				camera = glm::vec3(2, 3, 5);
-				break;
+		case FULL_VIEW:
+			camera = glm::vec3(2, 3, 5);
+			lookat = glm::vec3(0, 0, 0);
+			break;
+		case HEAD_VIEW:
+			camera = glm::vec3(Natalia.GetCameraOverHead()[0], Natalia.GetCameraOverHead()[1], Natalia.GetCameraOverHead()[2]);
+			lookat = glm::vec3(Natalia.GetCameraLookAt()[0], Natalia.GetCameraLookAt()[1], Natalia.GetCameraLookAt()[2]);
+			break;
+		case OVER_CHAR_VIEW:
+			camera = glm::vec3(Natalia.GetCameraMoreOverHead()[0], Natalia.GetCameraMoreOverHead()[1] + 2.0, Natalia.GetCameraMoreOverHead()[2] + 2.0);
+			lookat = glm::vec3(Natalia.GetCameraLookAt()[0], Natalia.GetCameraLookAt()[1], Natalia.GetCameraLookAt()[2]);
+			break;
+		default:
+			camera = glm::vec3(2, 3, 5);
+			break;
 		}
 		lastTime = currentTime;
+		if (spawn_time == (rand() % 5 + 1)){
+			x = (rand() % 5 + 0);
+			z = (rand() % 5 + 0);
+			for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
+				if (x != (*figure)->x && z != (*figure)->z){
+					Body *bodies = new Body(x, 0.0f, z, (rand() % 270 + 1), (rand() % 30 + 10) / 10);
+					figures.push_back(bodies);
+					break;
+				}
+			}
+			spawn_time = 0;
+		}
+		else if (spawn_time > 10)
+		{
+			spawn_time = 0;
+		}
 		while (glfwGetTime() - lastTime < 1.0f / 60.0f);
 
 	}

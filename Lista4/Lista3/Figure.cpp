@@ -9,6 +9,11 @@ GLuint Figure::getVertexBuffer(void)
 	return vertexbuffer;
 }
 
+GLuint Figure::getNormalBuffer(void)
+{
+	return normalbuffer;
+}
+
 GLuint Figure::getColorBuffer(void)
 {
 	return colorbuffer;

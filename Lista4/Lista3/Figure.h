@@ -22,6 +22,9 @@ public:
 	GLuint colorbuffer;
 	GLuint drawmode;
 	GLuint vertexsize;
+	GLuint normalbuffer;
+	GLfloat x;
+	GLfloat z;
 	vector<mat4> translations;
 	GLfloat height;
 	GLfloat width;
@@ -29,6 +32,7 @@ public:
 	GLuint getColorBuffer(void);
 	GLuint getDrawMode(void);
 	GLuint getVertexSize(void);
+	GLuint getNormalBuffer(void);
 	vector<mat4>& Figure::getTranslations(void);
 	virtual void Update(float deltaTime, glm::vec3 camera, glm::vec3 lookat);
 };

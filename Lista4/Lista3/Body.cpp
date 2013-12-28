@@ -7,7 +7,8 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate, float stom
 
 	height = 0.35;
 	width = 0.10;
-
+	x = spawn_x;
+	z = spawn_z;
 	move = 0.001;
 	rotate_counter = 0.001;
 	stomach_value = stomach;
@@ -131,12 +132,13 @@ Body::Body(float spawn_x, float spawn_y, float spawn_z, float rotate, float stom
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, colors.size()*sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
+
 }
 
 void Body::Update(float deltaTime, glm::vec3 camera, glm::vec3 lookat)
 {
-	move += (rand() % 2 + 1) / 100.0 - (stomach_value / 250);
-	rotate_counter += 0.05;
+	move += (rand() % 2 + 1) / 60.0 - (stomach_value / 250);
+	rotate_counter += (rand() % 2 + 1) / 10.0 - (stomach_value / 250);
 
 	// update prawa rêka góra
 	translations[0] = models[0] * glm::translate(0.0f, 0.25f, move);
