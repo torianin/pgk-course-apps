@@ -80,17 +80,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="n50e015.hgt" />
+    <None Include="n50e016.hgt" />
     <None Include="SimpleFragmentShader.fragmentshader" />
     <None Include="SimpleVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Figure.cpp" />
     <ClCompile Include="include\common\shader.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Figure.h" />
     <ClInclude Include="include\common\shader.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -10,14 +10,45 @@
 
 #include <common/shader.hpp>
 
-#include "Config.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+// reading an entire binary file
+#include <fstream>
+#include <cstdio>
+#include <iostream>
+#include <climits>
+#include <intrin.h>
+
+using namespace std;
+
 int main( void )
 {
+	const char *filename = "n50e016.hgt";
+	ifstream binary_data(filename, ios::binary);
+	int wspolrzedne = 1442401;
+	short * wspolrzedna;
+	if (binary_data.is_open())
+	{
+		wspolrzedna = new short[wspolrzedne];
+		binary_data.read(reinterpret_cast<char*>(wspolrzedna), sizeof(short)* wspolrzedne);
+		binary_data.close();
+	}
+	int counter = 0;
+	for (size_t i = 0; i < 3; i++)
+	{
+		for (size_t j = 0; j < 1201; j++)
+		{
+			//From little-endian to big-endian
+			wspolrzedna[counter] = (wspolrzedna[counter] >> 8) | (wspolrzedna[counter] << 8);
+			//cout << wspolrzedna[counter] << " ";
+			counter++;
+		}
+		cout << endl;
+		cout << endl;
+	}
+
 	if( !glfwInit() )
 	{
 		fprintf( stderr, "Failed to initialize GLFW\n" );
@@ -45,14 +76,9 @@ int main( void )
 	glfwSetWindowTitle( "Teren" );
 
 	glfwEnable( GLFW_STICKY_KEYS );
+	glfwSetMousePos(1024 / 2, 768 / 2);
 
-	glEnable(GL_PROGRAM_POINT_SIZE_EXT);
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-
-	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -61,73 +87,92 @@ int main( void )
 	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
 		
 	GLint MatrixID = glGetUniformLocation(programID, "Move");
-	
-	double lastTime = 0;
-	double currentTime;
-	float deltaTime;
-	glm::vec3 camera = glm::vec3(2, 3, 5);
-	glm::vec3 lookat = glm::vec3(0, 0, 0);
-	/* initialize random seed: */
-	srand(time(NULL));
 
-	std::vector<Figure*> figures;
+	// Get a handle for our "LightPosition" uniform
+	glUseProgram(programID);
+
+	// For speed computation
+	double lastTime = glfwGetTime();
+	int nbFrames = 0;
+
+	static const GLfloat g_vertex_buffer_data[] = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+	};
+
+	// VBO
+
+	GLuint vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	static const GLushort g_element_buffer_data[] = { 0, 1, 2 };
+
+	// Generate a buffer for the indices as well
+	GLuint elementbuffer;
+	glGenBuffers(1, &elementbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_element_buffer_data), g_element_buffer_data, GL_STATIC_DRAW);
+
 
 	do{
-		currentTime = glfwGetTime();
-		deltaTime = float(currentTime - lastTime);
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glUseProgram(programID);
-
-		for (std::vector<Figure*>::iterator figure = figures.begin(); figure != figures.end(); ++figure){
-
-			for (unsigned int i = 0; i < BODYPARTS; i++){
-				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &((*figure)->getTranslations()[i])[0][0]);
-
-				glEnableVertexAttribArray(0);
-				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getVertexBuffer());
-				glVertexAttribPointer(
-					0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-					3,                  // size
-					GL_FLOAT,           // type
-					GL_FALSE,           // normalized?
-					0,                  // stride
-					(void*)0            // array buffer offset
-					);
-
-				glEnableVertexAttribArray(1);
-				glBindBuffer(GL_ARRAY_BUFFER, (*figure)->getColorBuffer());
-				glVertexAttribPointer(
-					1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-					3,                                // size
-					GL_FLOAT,                         // type
-					GL_FALSE,                         // normalized?
-					0,                                // stride
-					(void*)0                          // array buffer offset
-					);
-
-				glDrawArrays((*figure)->getDrawMode(), 0, (*figure)->getVertexSize());
-
-				glDisableVertexAttribArray(0);
-				glDisableVertexAttribArray(1);
-			}
-
-			(*figure)->Update(deltaTime, camera, lookat);
+		// Measure speed
+		double currentTime = glfwGetTime();
+		nbFrames++;
+		if (currentTime - lastTime >= 1.0){ // If last prinf() was more than 1sec ago
+			// printf and reset
+			printf("FPS: %f\n", 1000.0 / double(nbFrames));
+			nbFrames = 0;
+			lastTime += 1.0;
 		}
 
+		// Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Use our shader
+		glUseProgram(programID);
+
+		// 1rst attribute buffer : vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glVertexAttribPointer(
+			0,                  // attribute
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+			);
+
+		// Index buffer
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+
+
+		// Draw the triangles !
+		glDrawElements(
+			GL_TRIANGLES,      // mode
+			sizeof(g_element_buffer_data),    // count
+			GL_UNSIGNED_SHORT,   // type
+			(void*)0           // element array buffer offset
+			);
+
+
+		glDisableVertexAttribArray(0);
+
+		// Swap buffers
 		glfwSwapBuffers();
-		while (glfwGetTime() - lastTime < 1.0f / 60.0f);
 
-	}
-	while( glfwGetKey( GLFW_KEY_ESC ) != GLFW_PRESS &&
-		   glfwGetWindowParam( GLFW_OPENED ) );
+	} // Check if the ESC key was pressed or the window was closed
+	while (glfwGetKey(GLFW_KEY_ESC) != GLFW_PRESS &&
+	glfwGetWindowParam(GLFW_OPENED));
 
-	glfwTerminate();
-
+	// Cleanup VBO and shader
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
 
+	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
 	return 0;
