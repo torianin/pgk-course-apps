@@ -21,9 +21,14 @@
 #include <climits>
 #include <intrin.h>
 
-using namespace std;
+// Constructing vectors
+#include <iostream>
+#include <vector>
 
-int main( void )
+using namespace std;
+using namespace glm;
+
+int main(void)
 {
 	const char *filename = "n50e016.hgt";
 	ifstream binary_data(filename, ios::binary);
@@ -36,22 +41,20 @@ int main( void )
 		binary_data.close();
 	}
 	int counter = 0;
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < 1201; i++)
 	{
 		for (size_t j = 0; j < 1201; j++)
 		{
 			//From little-endian to big-endian
 			wspolrzedna[counter] = (wspolrzedna[counter] >> 8) | (wspolrzedna[counter] << 8);
-			//cout << wspolrzedna[counter] << " ";
+			// cout << wspolrzedna[counter] << " ";
 			counter++;
 		}
-		cout << endl;
-		cout << endl;
 	}
 
-	if( !glfwInit() )
+	if (!glfwInit())
 	{
-		fprintf( stderr, "Failed to initialize GLFW\n" );
+		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
 	}
 
@@ -60,9 +63,9 @@ int main( void )
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if( !glfwOpenWindow( 800, 600, 0,0,0,0, 32,0, GLFW_WINDOW ) )
+	if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 32, 0, GLFW_WINDOW))
 	{
-		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
+		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
 		return -1;
 	}
@@ -73,9 +76,9 @@ int main( void )
 		return -1;
 	}
 
-	glfwSetWindowTitle( "Teren" );
+	glfwSetWindowTitle("Teren");
 
-	glfwEnable( GLFW_STICKY_KEYS );
+	glfwEnable(GLFW_STICKY_KEYS);
 	glfwSetMousePos(1024 / 2, 768 / 2);
 
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -84,9 +87,9 @@ int main( void )
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
 
-	GLuint programID = LoadShaders( "SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader" );
-		
-	GLint MatrixID = glGetUniformLocation(programID, "Move");
+	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
+	GLint SentHeight = glGetUniformLocation(programID, "Vects");
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
@@ -95,27 +98,41 @@ int main( void )
 	double lastTime = glfwGetTime();
 	int nbFrames = 0;
 
-	static const GLfloat g_vertex_buffer_data[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-	};
-
-	// VBO
+	vector<vec3> vectors;
+	counter = 1;
+	
+	for (size_t j = 0; j < 10; j++)
+	{
+		for (size_t i = 0; i < 1201; i++)
+		{
+			vectors.push_back(vec3(i*0.1, j*-0.1, wspolrzedna[counter]));
+			counter++;
+		}
+	}
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(vec3), vectors.data(), GL_STATIC_DRAW);
 
-	static const GLushort g_element_buffer_data[] = { 0, 1, 2 };
+	static GLushort g_element_buffer_data[250];
+	counter = 0;
+	for (size_t j = 0; j < 10; j++)
+	{
+		for (size_t i = 0; i < 10; i++)
+		{
+				g_element_buffer_data[counter++] = 0 + (1201 * j) + i;
+				g_element_buffer_data[counter++] = 1 + (1201 * j) + i;
+				g_element_buffer_data[counter++] = 1201 + (1201 * j) + i;
+		}
+	}
+
 
 	// Generate a buffer for the indices as well
 	GLuint elementbuffer;
 	glGenBuffers(1, &elementbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_element_buffer_data), g_element_buffer_data, GL_STATIC_DRAW);
-
 
 	do{
 		// Measure speed
@@ -149,7 +166,6 @@ int main( void )
 		// Index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
 
-
 		// Draw the triangles !
 		glDrawElements(
 			GL_TRIANGLES,      // mode
@@ -157,7 +173,6 @@ int main( void )
 			GL_UNSIGNED_SHORT,   // type
 			(void*)0           // element array buffer offset
 			);
-
 
 		glDisableVertexAttribArray(0);
 

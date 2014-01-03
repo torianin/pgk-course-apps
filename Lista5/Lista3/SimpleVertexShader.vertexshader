@@ -1,12 +1,20 @@
 #version 330 core
 
 // Input vertex data, different for all executions of this shader.
-layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(location = 0) in vec3 position;
+
+// Output data ; will be interpolated for each fragment.
+out vec3 fragmentColor;
 
 void main(){
-
-    gl_Position.xyz = vertexPosition_modelspace;
+	vec3 color;
+    gl_Position.xy = position.xy;
+    gl_Position.z = 1.0;
     gl_Position.w = 1.0;
-
+	if	(position.z < 0) fragmentColor = vec3(0.,       0.,        1.); //blue
+    else if (position.z < 500)   fragmentColor = vec3(0.,       position.z/500,    0.); //->green
+    else if (position.z < 1000)   fragmentColor = vec3(position.z/500-1, 1.,        0.); //->yellow
+	else if (position.z < 1500)  fragmentColor = vec3(1.,       2.-position.z/500, 0.); //->red
+	else                 fragmentColor = vec3(1.,1.,1.);                //white
 }
 
