@@ -28,12 +28,15 @@ using namespace glm;
 class Fragment
 {
 public:
-	Fragment();
-	int counter;
+	Fragment(char *filename);
+	GLuint counter;
+	GLuint LOD;
 	GLuint vertexbuffer;
 	GLuint elementbuffer;
 	GLsizei elementbuffersize;
+	vector<GLuint> element_buffer_data;
 	int getCounter();
+	void generateElementBuffer(GLuint LOD);
 	GLuint getVertexbuffer();
 	GLuint getElementbuffer();
 	GLsizei getElementbuffersize();

@@ -87,13 +87,9 @@ int main(void)
 	double lastTime = glfwGetTime();
 	int nbFrames = 0;
 
-
-	Fragment first;
+	Fragment first("n50e015.hgt");
 
 	do{
-		// Measure speed
-		// glfwGetTime is called only once, the first time this function is called
-		static double lastTime = glfwGetTime();
 
 		// Compute time difference between current and last frame
 		double currentTime = glfwGetTime();
@@ -153,6 +149,26 @@ int main(void)
 		// Strafe left
 		if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS){
 			position -= right * deltaTime * speed;
+		}
+		// LOD
+		if (glfwGetKey(GLFW_KEY_1) == GLFW_PRESS){
+			first.generateElementBuffer(1);
+		} else if (glfwGetKey(GLFW_KEY_2) == GLFW_PRESS){
+			first.generateElementBuffer(2);
+		} else if (glfwGetKey(GLFW_KEY_3) == GLFW_PRESS){
+			first.generateElementBuffer(3);
+		} else if (glfwGetKey(GLFW_KEY_4) == GLFW_PRESS){
+			first.generateElementBuffer(4);
+		} else if (glfwGetKey(GLFW_KEY_5) == GLFW_PRESS){
+			first.generateElementBuffer(5);
+		} else if (glfwGetKey(GLFW_KEY_6) == GLFW_PRESS){
+			first.generateElementBuffer(6);
+		} else if (glfwGetKey(GLFW_KEY_7) == GLFW_PRESS){
+			first.generateElementBuffer(7);
+		} else if (glfwGetKey(GLFW_KEY_8) == GLFW_PRESS){
+			first.generateElementBuffer(8);
+		} else if (glfwGetKey(GLFW_KEY_9) == GLFW_PRESS){
+			first.generateElementBuffer(9);
 		}
 
 		float FoV = initialFoV - 5 * glfwGetMouseWheel();

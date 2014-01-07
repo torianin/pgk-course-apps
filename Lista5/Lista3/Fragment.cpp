@@ -1,8 +1,7 @@
 #include "Fragment.h"
 
-Fragment::Fragment()
+Fragment::Fragment(char *filename)
 {
-	const char *filename = "n50e015.hgt";
 	ifstream binary_data(filename, ios::binary);
 	int wspolrzedne = 1442401;
 	short * wspolrzedna;
@@ -40,30 +39,34 @@ Fragment::Fragment()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(vec3), vectors.data(), GL_STATIC_DRAW);
 	
-	static GLuint g_element_buffer_data[8640000];
+	generateElementBuffer(10);
+}
 
-	counter = 0;
-	for (size_t j = 0; j < 1200; j++)
+void Fragment::generateElementBuffer(GLuint LOD)
+{
+	element_buffer_data.clear();
+	for (size_t j = 0; j < 1200 / LOD; j++)
 	{
-		for (size_t i = 0; i < 1200; i++)
+		for (size_t i = 0; i < 1200 / LOD; i++)
 		{
-			g_element_buffer_data[counter++] = 0 + (1201 * j) + i;
-			g_element_buffer_data[counter++] = 1 + (1201 * j) + i;
-			g_element_buffer_data[counter++] = 1201 + (1201 * j) + i;
-			g_element_buffer_data[counter++] = 1 + (1201 * j) + i;
-			g_element_buffer_data[counter++] = 1202 + (1201 * j) + i;
-			g_element_buffer_data[counter++] = 1201 + (1201 * j) + i;
+			element_buffer_data.push_back(LOD * 0 + (1201 * LOD * j) + (LOD * i));
+			element_buffer_data.push_back(LOD * 1 + (1201 * LOD * j) + (LOD * i));
+			element_buffer_data.push_back(LOD * 1201 + (1201 * LOD * j) + (LOD * i));
+			element_buffer_data.push_back(LOD * 1 + (1201 * LOD * j) + (LOD * i));
+			element_buffer_data.push_back(LOD * 1202 + (1201 * LOD * j) + (LOD * i));
+			element_buffer_data.push_back(LOD * 1201 + (1201 * LOD * j) + (LOD * i));
 		}
 	}
 
 	counter = counter / 3;
+
 	// Generate a buffer for the indices as well
 	glGenBuffers(1, &elementbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_element_buffer_data), g_element_buffer_data, GL_STATIC_DRAW);
-	elementbuffersize = sizeof(g_element_buffer_data);
-}
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_buffer_data.size()*sizeof(GLuint), element_buffer_data.data(), GL_STATIC_DRAW);
+	elementbuffersize = element_buffer_data.size()*sizeof(GLuint);
 
+}
 int Fragment::getCounter()
 {
 	return counter;
