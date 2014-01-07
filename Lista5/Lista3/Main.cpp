@@ -14,44 +14,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-// reading an entire binary file
-#include <fstream>
-#include <cstdio>
-#include <iostream>
-#include <climits>
-#include <intrin.h>
-
 // Constructing vectors
 #include <iostream>
 #include <vector>
+
+#include "Config.h"
 
 using namespace std;
 using namespace glm;
 
 int main(void)
 {
-	const char *filename = "n50e016.hgt";
-	ifstream binary_data(filename, ios::binary);
-	int wspolrzedne = 1442401;
-	short * wspolrzedna;
-	if (binary_data.is_open())
-	{
-		wspolrzedna = new short[wspolrzedne];
-		binary_data.read(reinterpret_cast<char*>(wspolrzedna), sizeof(short)* wspolrzedne);
-		binary_data.close();
-	}
-	int counter = 0;
-	for (size_t i = 0; i < 1201; i++)
-	{
-		for (size_t j = 0; j < 1201; j++)
-		{
-			//From little-endian to big-endian
-			wspolrzedna[counter] = (wspolrzedna[counter] >> 8) | (wspolrzedna[counter] << 8);
-			// cout << wspolrzedna[counter] << " ";
-			counter++;
-		}
-	}
-
 	if (!glfwInit())
 	{
 		fprintf(stderr, "Failed to initialize GLFW\n");
@@ -63,7 +36,7 @@ int main(void)
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	if (!glfwOpenWindow(800, 600, 0, 0, 0, 0, 32, 0, GLFW_WINDOW))
+	if (!glfwOpenWindow(1024, 768, 0, 0, 0, 0, 32, 0, GLFW_WINDOW))
 	{
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
@@ -89,58 +62,47 @@ int main(void)
 
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
-	GLint SentHeight = glGetUniformLocation(programID, "Vects");
+	// Get a handle for our "MVP" uniform
+	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	// Get a handle for our "LightPosition" uniform
 	glUseProgram(programID);
+	
+	// Kamera
+	glm::mat4 ViewMatrix;
+	glm::mat4 ProjectionMatrix;
+	// Initial position : on +Z
+	glm::vec3 position = glm::vec3(60, -60, 100);
+	// Initial horizontal angle : toward -Z
+	float horizontalAngle = 3.14f;
+	// Initial vertical angle : none
+	float verticalAngle = 0.0f;
+	// Initial Field of View
+	float initialFoV = 65.0f;
+
+	float speed = 3.0f; // 3 units / second
+	float mouseSpeed = 0.005f;
 
 	// For speed computation
 	double lastTime = glfwGetTime();
 	int nbFrames = 0;
 
-	vector<vec3> vectors;
-	counter = 1;
-	
-	for (size_t j = 0; j < 10; j++)
-	{
-		for (size_t i = 0; i < 1201; i++)
-		{
-			vectors.push_back(vec3(i*0.1, j*-0.1, wspolrzedna[counter]));
-			counter++;
-		}
-	}
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vectors.size()*sizeof(vec3), vectors.data(), GL_STATIC_DRAW);
-
-	static GLushort g_element_buffer_data[250];
-	counter = 0;
-	for (size_t j = 0; j < 10; j++)
-	{
-		for (size_t i = 0; i < 10; i++)
-		{
-				g_element_buffer_data[counter++] = 0 + (1201 * j) + i;
-				g_element_buffer_data[counter++] = 1 + (1201 * j) + i;
-				g_element_buffer_data[counter++] = 1201 + (1201 * j) + i;
-		}
-	}
-
-
-	// Generate a buffer for the indices as well
-	GLuint elementbuffer;
-	glGenBuffers(1, &elementbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_element_buffer_data), g_element_buffer_data, GL_STATIC_DRAW);
+	Fragment first;
 
 	do{
 		// Measure speed
+		// glfwGetTime is called only once, the first time this function is called
+		static double lastTime = glfwGetTime();
+
+		// Compute time difference between current and last frame
 		double currentTime = glfwGetTime();
+		float deltaTime = float(currentTime - lastTime);
+
 		nbFrames++;
 		if (currentTime - lastTime >= 1.0){ // If last prinf() was more than 1sec ago
 			// printf and reset
-			printf("FPS: %f\n", 1000.0 / double(nbFrames));
+			printf("FPS: %f Trojkatow: %d\n", 1000.0 / double(nbFrames), first.getCounter());
 			nbFrames = 0;
 			lastTime += 1.0;
 		}
@@ -151,9 +113,69 @@ int main(void)
 		// Use our shader
 		glUseProgram(programID);
 
+		// Direction : Spherical coordinates to Cartesian coordinates conversion
+		glm::vec3 direction(
+			cos(verticalAngle) * sin(horizontalAngle),
+			sin(verticalAngle),
+			cos(verticalAngle) * cos(horizontalAngle)
+			);
+
+		// Right vector
+		glm::vec3 right = glm::vec3(
+			sin(horizontalAngle - 3.14f / 2.0f),
+			0,
+			cos(horizontalAngle - 3.14f / 2.0f)
+			);
+
+		// Up vector
+		glm::vec3 up = glm::cross(right, direction);
+
+		// Move forward
+		if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS){
+			position += up * deltaTime * speed;
+		}
+		// Move backward
+		if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS){
+			position -= up * deltaTime * speed;
+		}
+		// Move forward
+		if (glfwGetKey(GLFW_KEY_KP_ADD) == GLFW_PRESS){
+			position += direction * deltaTime * speed;
+		}
+		// Move backward
+		if (glfwGetKey(GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS){
+			position -= direction * deltaTime * speed;
+		}
+		// Strafe right
+		if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS){
+			position += right * deltaTime * speed;
+		}
+		// Strafe left
+		if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS){
+			position -= right * deltaTime * speed;
+		}
+
+		float FoV = initialFoV - 5 * glfwGetMouseWheel();
+
+		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+		ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);
+		// Camera matrix
+		ViewMatrix = glm::lookAt(
+			position,           // Camera is here
+			position + direction, // and looks here : at the same position, plus "direction"
+			up                  // Head is up (set to 0,-1,0 to look upside-down)
+			);
+
+		glm::mat4 ModelMatrix = glm::mat4(1.0);
+		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+		// Send our transformation to the currently bound shader, 
+		// in the "MVP" uniform
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, first.getVertexbuffer());
 		glVertexAttribPointer(
 			0,                  // attribute
 			3,                  // size
@@ -164,18 +186,19 @@ int main(void)
 			);
 
 		// Index buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementbuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, first.getElementbuffer());
 
 		// Draw the triangles !
 		glDrawElements(
 			GL_TRIANGLES,      // mode
-			sizeof(g_element_buffer_data),    // count
-			GL_UNSIGNED_SHORT,   // type
+			first.getElementbuffersize(),    // count
+			GL_UNSIGNED_INT,   // type
 			(void*)0           // element array buffer offset
 			);
 
 		glDisableVertexAttribArray(0);
 
+		lastTime = currentTime;
 		// Swap buffers
 		glfwSwapBuffers();
 
@@ -183,9 +206,13 @@ int main(void)
 	while (glfwGetKey(GLFW_KEY_ESC) != GLFW_PRESS &&
 	glfwGetWindowParam(GLFW_OPENED));
 
+	//glDeleteBuffers(1, &vertexbuffer);
+	//glDeleteBuffers(1, &elementbuffer);
 	// Cleanup VBO and shader
 	glDeleteProgram(programID);
 	glDeleteVertexArrays(1, &VertexArrayID);
+
+
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

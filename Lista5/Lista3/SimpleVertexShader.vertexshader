@@ -6,15 +6,19 @@ layout(location = 0) in vec3 position;
 // Output data ; will be interpolated for each fragment.
 out vec3 fragmentColor;
 
+// Values that stay constant for the whole mesh.
+uniform mat4 MVP;
+
 void main(){
 	vec3 color;
-    gl_Position.xy = position.xy;
-    gl_Position.z = 1.0;
-    gl_Position.w = 1.0;
-	if	(position.z < 0) fragmentColor = vec3(0.,       0.,        1.); //blue
-    else if (position.z < 500)   fragmentColor = vec3(0.,       position.z/500,    0.); //->green
-    else if (position.z < 1000)   fragmentColor = vec3(position.z/500-1, 1.,        0.); //->yellow
-	else if (position.z < 1500)  fragmentColor = vec3(1.,       2.-position.z/500, 0.); //->red
+
+	// Output position of the vertex, in clip space : MVP * position
+	gl_Position =  MVP * vec4(position.xy ,1 ,1 );
+
+	if	(position.z < 0) fragmentColor = vec3(0.,0.,1.); //blue
+    else if (position.z < 500)   fragmentColor = vec3(0.,position.z/500,0.); //->green
+    else if (position.z < 1000)   fragmentColor = vec3(position.z/500-1,1.,0.); //->yellow
+	else if (position.z < 1500)  fragmentColor = vec3(1.,2.-position.z/500, 0.); //->red
 	else                 fragmentColor = vec3(1.,1.,1.);                //white
 }
 
